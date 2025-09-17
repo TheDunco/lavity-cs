@@ -1,8 +1,22 @@
-[gd_scene load_steps=2 format=3 uid="uid://brmf752ifplp0"]
+[gd_scene load_steps=4 format=3 uid="uid://brmf752ifplp0"]
 
 [ext_resource type="PackedScene" uid="uid://bo3wlbfb6kci3" path="res://Scenes/Creatures/Player.tscn" id="2_idj7w"]
 
+[sub_resource type="Gradient" id="Gradient_r150o"]
+colors = PackedColorArray(0.497474, 0.497474, 0.497474, 1, 0.498039, 0.498039, 0.498039, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_idj7w"]
+gradient = SubResource("Gradient_r150o")
+
 [node name="Node2D" type="Node2D"]
+
+[node name="TempBG" type="Sprite2D" parent="."]
+position = Vector2(791, 480)
+scale = Vector2(26.0078, 16.0863)
+texture = SubResource("GradientTexture2D_idj7w")
 
 [node name="Player" parent="." instance=ExtResource("2_idj7w")]
 position = Vector2(198, 111)
+
+[node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
+blend_mode = 1

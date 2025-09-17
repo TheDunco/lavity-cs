@@ -3,16 +3,16 @@ using System;
 
 public partial class Player : CharacterBody2D
 {
-	[Export] private int Acceleration = 700;
-	[Export] private float AirResistance = 0.0002f;
-	[Export] private float MaxVelocity = 1000;
+	private int Acceleration = 1000;
+	private float AirResistance = 0.0002f;
+	private float MaxVelocity = 1500;
 
-	private Sprite2D Sprite = null;
+	private AnimatedSprite2D Sprite = null;
 
 	public override void _Ready()
 	{
 		GD.Print("Ready");
-		Sprite = GetNode<Sprite2D>("Sprite");
+		Sprite = GetNode<AnimatedSprite2D>("Sprite");
 	}
 
 
@@ -36,29 +36,29 @@ public partial class Player : CharacterBody2D
 	public override void _Process(double delta)
 	{
 
-		bool InputAdded = false;
+		bool IsInputAdded = false;
 		if (Input.IsActionPressed("MoveUp"))
 		{
 			Velocity += Vector2.Up * Acceleration * (float)delta;
-			InputAdded = true;
+			IsInputAdded = true;
 		}
 
 		if (Input.IsActionPressed("MoveLeft"))
 		{
 			Velocity += Vector2.Left * Acceleration * (float)(delta);
-			InputAdded = true;
+			IsInputAdded = true;
 		}
 
 		if (Input.IsActionPressed("MoveDown"))
 		{
 			Velocity += Vector2.Down * Acceleration * (float)(delta);
-			InputAdded = true;
+			IsInputAdded = true;
 		}
 
 		if (Input.IsActionPressed("MoveRight"))
 		{
 			Velocity += Vector2.Right * Acceleration * (float)(delta);
-			InputAdded = true;
+			IsInputAdded = true;
 		}
 
 		if (Input.IsKeyPressed(Key.Space))
@@ -68,7 +68,16 @@ public partial class Player : CharacterBody2D
 
 		bool isZeroApprox = Velocity.IsZeroApprox();
 
-		if (!isZeroApprox && !InputAdded)
+		if (IsInputAdded)
+		{
+			Sprite.Play();
+		}
+		else
+		{
+			Sprite.Stop();
+		}
+
+		if (!isZeroApprox && !IsInputAdded)
 		{
 			Velocity += -Velocity * AirResistance;
 		}

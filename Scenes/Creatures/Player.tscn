@@ -10,7 +10,7 @@ height = 86.0
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_ohbs4")
 
-[node name="Flying-moth0001" type="Sprite2D" parent="."]
+[node name="Sprite" type="Sprite2D" parent="."]
 position = Vector2(-1, 0)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_f00fu")

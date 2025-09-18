@@ -8,11 +8,13 @@ public partial class Player : CharacterBody2D
 	private float MaxVelocity = 1500;
 
 	private AnimatedSprite2D Sprite = null;
+	private AudioStreamPlayer WingFlapSounds = null;
 
 	public override void _Ready()
 	{
 		GD.Print("Ready");
 		Sprite = GetNode<AnimatedSprite2D>("Sprite");
+		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
 	}
 
 
@@ -71,6 +73,10 @@ public partial class Player : CharacterBody2D
 		if (IsInputAdded)
 		{
 			Sprite.Play();
+			if (!WingFlapSounds.Playing)
+			{
+				WingFlapSounds.Play();
+			}
 		}
 		else
 		{

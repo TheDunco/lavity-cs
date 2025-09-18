@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://brmf752ifplp0"]
+[gd_scene load_steps=6 format=3 uid="uid://brmf752ifplp0"]
 
 [ext_resource type="PackedScene" uid="uid://bo3wlbfb6kci3" path="res://Scenes/Creatures/Player.tscn" id="2_idj7w"]
 [ext_resource type="AudioStream" uid="uid://4hmkl3nrbvfr" path="res://Assets/Audio/music/A Moth in Light.wav" id="2_kln2b"]
+[ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="3_kln2b"]
 
 [sub_resource type="Gradient" id="Gradient_r150o"]
 colors = PackedColorArray(0.497474, 0.497474, 0.497474, 1, 0.498039, 0.498039, 0.498039, 1)
@@ -25,3 +26,6 @@ blend_mode = 1
 [node name="A_Moth_In_Light" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_kln2b")
 autoplay = true
+
+[node name="LavityLight" parent="." instance=ExtResource("3_kln2b")]
+position = Vector2(570, 244)

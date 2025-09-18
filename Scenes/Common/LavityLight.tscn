@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://dn4dc1fkdpmus"]
+
+[ext_resource type="Texture2D" uid="uid://b1d1vc17ifymn" path="res://Resources/PointLightTexture.tres" id="1_24a55"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_24a55"]
+radius = 100.005
+
+[node name="LavityLight" type="Node2D"]
+
+[node name="LavityPointLight" type="PointLight2D" parent="."]
+scale = Vector2(3, 3)
+texture = ExtResource("1_24a55")
+
+[node name="GravityArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+gravity_space_override = 1
+gravity_point = true
+gravity_point_unit_distance = 200.0
+gravity_point_center = Vector2(0, 0)
+gravity_direction = Vector2(0, 0)
+gravity = -0.098
+
+[node name="GravityAreaCollisionShape" type="CollisionShape2D" parent="GravityArea"]
+shape = SubResource("CircleShape2D_24a55")

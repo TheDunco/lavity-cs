@@ -12,7 +12,6 @@ public partial class Player : CharacterBody2D
 
 	public override void _Ready()
 	{
-		GD.Print("Ready");
 		Sprite = GetNode<AnimatedSprite2D>("Sprite");
 		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
 	}
@@ -66,6 +65,7 @@ public partial class Player : CharacterBody2D
 		if (Input.IsKeyPressed(Key.Space))
 		{
 			Position = Vector2.Zero;
+			Velocity = Vector2.Zero;
 		}
 
 		bool isZeroApprox = Velocity.IsZeroApprox();
@@ -96,6 +96,8 @@ public partial class Player : CharacterBody2D
 
 		LookAt(Velocity.Normalized() + Position);
 		OrientByRotation();
+
+		Velocity += GetGravity();
 
 		MoveAndSlide();
 	}

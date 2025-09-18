@@ -25,7 +25,10 @@ blend_mode = 1
 
 [node name="A_Moth_In_Light" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_kln2b")
-autoplay = true
 
 [node name="LavityLight" parent="." instance=ExtResource("3_kln2b")]
 position = Vector2(570, 244)
+
+[node name="LavityLight2" parent="." instance=ExtResource("3_kln2b")]
+position = Vector2(995, 377)
+scale = Vector2(3, 3)

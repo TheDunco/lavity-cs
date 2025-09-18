@@ -11,5 +11,7 @@ public partial class LavityLight : Node2D
 		base._Ready();
 		GravityArea = GetNode<Area2D>("GravityArea");
 		LavityPointLight = GetNode<PointLight2D>("LavityPointLight");
+
+		GravityArea.GravityPointUnitDistance *= Scale.X;
 	}
 }

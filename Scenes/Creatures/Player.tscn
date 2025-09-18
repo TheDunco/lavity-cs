@@ -58,4 +58,5 @@ speed_scale = 3.0
 
 [node name="PlayerLight" type="PointLight2D" parent="."]
 scale = Vector2(3, 3)
+blend_mode = 2
 texture = ExtResource("5_fgvx3")

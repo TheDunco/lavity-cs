@@ -1,34 +1,44 @@
-[gd_scene load_steps=6 format=3 uid="uid://brmf752ifplp0"]
+[gd_scene load_steps=5 format=3 uid="uid://brmf752ifplp0"]
 
 [ext_resource type="PackedScene" uid="uid://bo3wlbfb6kci3" path="res://Scenes/Creatures/Player.tscn" id="2_idj7w"]
 [ext_resource type="AudioStream" uid="uid://4hmkl3nrbvfr" path="res://Assets/Audio/music/A Moth in Light.wav" id="2_kln2b"]
 [ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="3_kln2b"]
 
-[sub_resource type="Gradient" id="Gradient_r150o"]
-colors = PackedColorArray(0.497474, 0.497474, 0.497474, 1, 0.498039, 0.498039, 0.498039, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_idj7w"]
-gradient = SubResource("Gradient_r150o")
+[sub_resource type="Environment" id="Environment_kln2b"]
+background_mode = 3
+glow_enabled = true
+glow_strength = 1.3
+glow_mix = 0.133
+glow_bloom = 0.3
+glow_blend_mode = 4
 
 [node name="Node2D" type="Node2D"]
 
-[node name="TempBG" type="Sprite2D" parent="."]
-position = Vector2(791, 480)
-scale = Vector2(26.0078, 16.0863)
-texture = SubResource("GradientTexture2D_idj7w")
-
-[node name="Player" parent="." instance=ExtResource("2_idj7w")]
-position = Vector2(198, 111)
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_kln2b")
 
 [node name="DirectionalDarkness" type="DirectionalLight2D" parent="."]
+energy = 0.95
 blend_mode = 1
 
 [node name="A_Moth_In_Light" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_kln2b")
 
 [node name="LavityLight" parent="." instance=ExtResource("3_kln2b")]
-position = Vector2(570, 244)
+position = Vector2(151, 96)
 
 [node name="LavityLight2" parent="." instance=ExtResource("3_kln2b")]
-position = Vector2(995, 377)
+position = Vector2(337, 223)
 scale = Vector2(3, 3)
+
+[node name="LavityLight3" parent="." instance=ExtResource("3_kln2b")]
+position = Vector2(748, 507)
+scale = Vector2(6, 6)
+
+[node name="LavityLight4" parent="." instance=ExtResource("3_kln2b")]
+position = Vector2(1350, 1157)
+scale = Vector2(12, 12)
+
+[node name="Player" parent="." instance=ExtResource("2_idj7w")]
+z_index = 10
+z_as_relative = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bo3wlbfb6kci3"]
+[gd_scene load_steps=13 format=3 uid="uid://bo3wlbfb6kci3"]
 
 [ext_resource type="Script" uid="uid://1smbulwqiw1p" path="res://Scenes/Creatures/Player.cs" id="1_ohbs4"]
 [ext_resource type="Texture2D" uid="uid://bm24oyvrkln0t" path="res://Assets/moth-flying/moth-flying-1.png" id="2_f00fu"]
@@ -7,6 +7,14 @@
 [ext_resource type="Texture2D" uid="uid://b1d1vc17ifymn" path="res://Resources/PointLightTexture.tres" id="5_fgvx3"]
 [ext_resource type="AudioStream" uid="uid://6dy71wmtaiy3" path="res://Assets/Audio/sfx/wing_flap1.wav" id="6_s2fct"]
 [ext_resource type="AudioStream" uid="uid://dveefh3mndixk" path="res://Assets/Audio/sfx/wing_flap2.wav" id="7_fwtcf"]
+
+[sub_resource type="Gradient" id="Gradient_kln2b"]
+colors = PackedColorArray(0.497474, 0.497474, 0.497474, 1, 0.498039, 0.498039, 0.498039, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fgvx3"]
+gradient = SubResource("Gradient_kln2b")
+width = 2048
+height = 2048
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f00fu"]
 radius = 30.0
@@ -41,8 +49,17 @@ collision_layer = 3
 collision_mask = 3
 script = ExtResource("1_ohbs4")
 
+[node name="TempBG" type="Sprite2D" parent="."]
+z_as_relative = false
+scale = Vector2(10, 10)
+texture = SubResource("GradientTexture2D_fgvx3")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+limit_smoothed = true
+position_smoothing_enabled = true
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 6)
+position = Vector2(0, -1)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_f00fu")
 
@@ -51,12 +68,11 @@ stream = SubResource("AudioStreamRandomizer_351oh")
 volume_db = -15.338
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(-4, 0)
+position = Vector2(-4, -8)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_f00fu")
 speed_scale = 3.0
 
 [node name="PlayerLight" type="PointLight2D" parent="."]
-scale = Vector2(3, 3)
-blend_mode = 2
+scale = Vector2(3.5, 3.5)
 texture = ExtResource("5_fgvx3")

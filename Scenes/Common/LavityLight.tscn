@@ -1,17 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://dn4dc1fkdpmus"]
+[gd_scene load_steps=3 format=3 uid="uid://dn4dc1fkdpmus"]
 
 [ext_resource type="Texture2D" uid="uid://b1d1vc17ifymn" path="res://Resources/PointLightTexture.tres" id="1_24a55"]
-[ext_resource type="Script" uid="uid://bkh4sdbn848ak" path="res://Scenes/Common/LavityLight.cs" id="1_h3hlx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_24a55"]
 radius = 50.0
 
 [node name="LavityLight" type="Node2D"]
-script = ExtResource("1_h3hlx")
 
 [node name="LavityPointLight" type="PointLight2D" parent="."]
 scale = Vector2(2, 2)
-blend_mode = 2
 texture = ExtResource("1_24a55")
 
 [node name="GravityArea" type="Area2D" parent="."]
@@ -22,7 +19,7 @@ gravity_point = true
 gravity_point_unit_distance = 100.0
 gravity_point_center = Vector2(0, 0)
 gravity_direction = Vector2(0, 0)
-gravity = -0.098
+gravity = -0.98
 
 [node name="GravityAreaCollisionShape" type="CollisionShape2D" parent="GravityArea"]
 shape = SubResource("CircleShape2D_24a55")

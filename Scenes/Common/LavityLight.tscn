@@ -9,10 +9,11 @@ radius = 50.0
 
 [node name="LavityPointLight" type="PointLight2D" parent="."]
 scale = Vector2(2, 2)
+shadow_enabled = true
 texture = ExtResource("1_24a55")
 
 [node name="GravityArea" type="Area2D" parent="."]
-collision_layer = 2
+collision_layer = 0
 collision_mask = 2
 gravity_space_override = 1
 gravity_point = true

@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://bwhalf3ib6lrr"]
+
+[ext_resource type="Texture2D" uid="uid://dnv1ekjelucll" path="res://Assets/Base pack/Tiles/dirtCenter.png" id="2_bdx0u"]
+[ext_resource type="Script" uid="uid://bsna2e7s0afmc" path="res://Scenes/Map/CaveTilemap.cs" id="3_bdx0u"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_yn8tp"]
+polygon = PackedVector2Array(-35, -35, 35, -35, 35, 35, -35, 35)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yn8tp"]
+texture = ExtResource("2_bdx0u")
+texture_region_size = Vector2i(70, 70)
+0:0/0 = 0
+0:0/0/occlusion_layer_0/polygon_0/polygon = SubResource("OccluderPolygon2D_yn8tp")
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-35, -35, 35, -35, 35, 35, -35, 35)
+
+[sub_resource type="TileSet" id="TileSet_2fo43"]
+tile_size = Vector2i(70, 70)
+occlusion_layer_0/light_mask = 1
+physics_layer_0/collision_layer = 3
+physics_layer_0/collision_mask = 3
+sources/0 = SubResource("TileSetAtlasSource_yn8tp")
+
+[node name="CaveTilemap" type="TileMapLayer"]
+tile_set = SubResource("TileSet_2fo43")
+script = ExtResource("3_bdx0u")

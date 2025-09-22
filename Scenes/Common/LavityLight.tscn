@@ -1,11 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://dn4dc1fkdpmus"]
+[gd_scene load_steps=4 format=3 uid="uid://dn4dc1fkdpmus"]
 
 [ext_resource type="Texture2D" uid="uid://b1d1vc17ifymn" path="res://Resources/PointLightTexture.tres" id="1_24a55"]
+[ext_resource type="Script" uid="uid://babu747ttx64g" path="res://Scenes/Common/LavityLight.cs" id="1_h3hlx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_24a55"]
 radius = 50.0
 
 [node name="LavityLight" type="Node2D"]
+script = ExtResource("1_h3hlx")
 
 [node name="LavityPointLight" type="PointLight2D" parent="."]
 scale = Vector2(2, 2)

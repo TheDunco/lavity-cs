@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-public partial class BodyAndCollisionRaycast : Node
+public partial class GravityCancellation : Node
 {
 	public CharacterBody2D Body { get; }
-	private RayCast2D RayCast;
+	public RayCast2D RayCast { get; }
+	private Area2D GravityOverrideArea;
 
-	public BodyAndCollisionRaycast(CharacterBody2D body, RayCast2D rayCast)
+	public GravityCancellation(CharacterBody2D body, RayCast2D rayCast)
 	{
 		Body = body;
 		RayCast = rayCast;
@@ -55,17 +56,62 @@ public partial class BodyAndCollisionRaycast : Node
 		RayCast.GlobalPosition = newGlobalPos;
 		UpdateRaycastTarget();
 	}
+	public void StartCancellingGravity()
+	{
+
+		if (GravityOverrideArea == null)
+		{
+
+			// Clone the body's collision shape
+			var CollisionShape = Body.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+			if (CollisionShape == null)
+				return;
+
+			// Create a new Area2D to override gravity
+			GravityOverrideArea = new()
+			{
+				Gravity = 0,
+				GravitySpaceOverride = Area2D.SpaceOverride.Replace,
+				GlobalPosition = Body.GlobalPosition,
+				Priority = 10,
+			};
+			CollisionShape2D GravityOverrideShape = (CollisionShape2D)CollisionShape.Duplicate();
+			GravityOverrideArea.AddChild(GravityOverrideShape);
+
+			// Add to the scene tree as a sibling of the body
+			Body.GetParent().AddChild(GravityOverrideArea);
+
+		}
+		else
+		{
+			GravityOverrideArea.GlobalPosition = Body.GlobalPosition;
+		}
+	}
+	public void StopCancellingGravity()
+	{
+		if (GravityOverrideArea != null)
+		{
+			GravityOverrideArea.Free();
+			GravityOverrideArea = null;
+		}
+	}
 }
 
 public partial class LavityLight : Node2D
 {
 	private Area2D GravityArea = null;
-	private List<BodyAndCollisionRaycast> GravityCancellationList = [];
+	private List<GravityCancellation> GravityCancellationList = [];
 
 	private void RemoveBodyFromCancellationList(CharacterBody2D characterBody)
 	{
 		//TODO: Remove the raycast as a child as well
-		GravityCancellationList.RemoveAll(b => b != null && b.Body == characterBody);
+		var CancellationsToRemove = GravityCancellationList.FindAll(b => b != null && b.Body == characterBody);
+		foreach (GravityCancellation GC in CancellationsToRemove)
+		{
+			GC.StopCancellingGravity();
+			GC.RayCast.Free();
+			GravityCancellationList.Remove(GC);
+		}
 	}
 
 	public override void _Ready()
@@ -82,7 +128,7 @@ public partial class LavityLight : Node2D
 					GlobalPosition = GlobalPosition
 				};
 				AddChild(RayCast);
-				GravityCancellationList.Add(new BodyAndCollisionRaycast(characterBody, RayCast));
+				GravityCancellationList.Add(new GravityCancellation(characterBody, RayCast));
 			}
 		};
 		GravityArea.BodyExited += (body) =>
@@ -99,12 +145,18 @@ public partial class LavityLight : Node2D
 	{
 		base._PhysicsProcess(delta);
 
-		foreach (BodyAndCollisionRaycast BandR in GravityCancellationList)
+		foreach (GravityCancellation GravityCancel in GravityCancellationList)
 		{
-			BandR.UpdateRaycastGlobalPosition(GlobalPosition);
-			bool ShouldCancelGravity = BandR.IsCollisionBeforeBody();
-			GD.Print("Should cancel gravity?", ShouldCancelGravity);
-			// TODO: Cancel gravity for this particular Body from this particular LavityLight
+			GravityCancel.UpdateRaycastGlobalPosition(GlobalPosition);
+			bool ShouldCancelGravity = GravityCancel.IsCollisionBeforeBody();
+			if (ShouldCancelGravity)
+			{
+				GravityCancel.StartCancellingGravity();
+			}
+			else
+			{
+				GravityCancel.StopCancellingGravity();
+			}
 		}
 
 	}

@@ -1,8 +1,5 @@
 using Godot;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 public partial class GravityCancellation : Node
 {
@@ -104,7 +101,6 @@ public partial class LavityLight : Node2D
 
 	private void RemoveBodyFromCancellationList(CharacterBody2D characterBody)
 	{
-		//TODO: Remove the raycast as a child as well
 		var CancellationsToRemove = GravityCancellationList.FindAll(b => b != null && b.Body == characterBody);
 		foreach (GravityCancellation GC in CancellationsToRemove)
 		{

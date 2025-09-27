@@ -11,12 +11,20 @@ public partial class Player : CharacterBody2D
 	private AnimatedSprite2D Sprite = null;
 	private AudioStreamPlayer WingFlapSounds = null;
 	private Camera2D Camera = null;
+	[Export] public float ZoomSpeed = 1f;     // How fast zoom target changes when holding
+	[Export] public float MinZoom = 0.25f;       // Minimum zoom factor
+	[Export] public float MaxZoom = 2.0f;       // Maximum zoom factor
+	[Export] public float ZoomTweenTime = 0.01f; // Time for smooth interpolation
+	private Vector2 targetZoom;
+	private Tween zoomTween;
+
 
 	public override void _Ready()
 	{
 		Sprite = GetNode<AnimatedSprite2D>("Sprite");
 		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
 		Camera = GetNode<Camera2D>("Camera");
+		targetZoom = Camera.Zoom;
 	}
 
 
@@ -71,6 +79,33 @@ public partial class Player : CharacterBody2D
 			Velocity = Vector2.Zero;
 		}
 
+		if (Input.IsActionPressed("ZoomIn"))
+		{
+			targetZoom += new Vector2(ZoomSpeed, ZoomSpeed) * (float)delta;
+
+		}
+
+		if (Input.IsActionPressed("ZoomOut"))
+		{
+			targetZoom -= new Vector2(ZoomSpeed, ZoomSpeed) * (float)delta;
+
+		}
+		// Clamp target zoom
+		targetZoom.X = Mathf.Clamp(targetZoom.X, MinZoom, MaxZoom);
+		targetZoom.Y = Mathf.Clamp(targetZoom.Y, MinZoom, MaxZoom);
+
+		// Smoothly animate toward target zoom
+		if (Camera.Zoom != targetZoom)
+		{
+			// Kill old tween if one is still running
+			zoomTween?.Kill();
+
+			zoomTween = CreateTween();
+			zoomTween.TweenProperty(Camera, "zoom", targetZoom, ZoomTweenTime)
+					 .SetTrans(Tween.TransitionType.Sine)
+					 .SetEase(Tween.EaseType.InOut);
+		}
+
 
 		bool isZeroApprox = Velocity.IsZeroApprox();
 
@@ -106,19 +141,5 @@ public partial class Player : CharacterBody2D
 		MoveAndSlide();
 	}
 
-	public override void _UnhandledKeyInput(InputEvent @event)
-	{
-		base._UnhandledKeyInput(@event);
-
-		if (@event.IsActionPressed("ZoomIn"))
-		{
-			Camera.Zoom += new Vector2(0.1f, 0.1f);
-		}
-
-		if (@event.IsActionPressed("ZoomOut"))
-		{
-			Camera.Zoom -= new Vector2(0.1f, 0.1f);
-		}
-	}
 
 }

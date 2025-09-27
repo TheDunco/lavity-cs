@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://brmf752ifplp0"]
+[gd_scene load_steps=6 format=3 uid="uid://brmf752ifplp0"]
 
 [ext_resource type="PackedScene" uid="uid://bo3wlbfb6kci3" path="res://Scenes/Creatures/Player.tscn" id="2_idj7w"]
 [ext_resource type="AudioStream" uid="uid://4hmkl3nrbvfr" path="res://Assets/Audio/music/A Moth in Light.wav" id="2_kln2b"]
+[ext_resource type="Environment" uid="uid://bfvcvbom7pewe" path="res://Scenes/Environment/WorldEnvironment.tres" id="5_jw32o"]
 [ext_resource type="PackedScene" uid="uid://1n87cnegmqf7" path="res://Scenes/Environment/WorldGenerator.tscn" id="5_pbw6q"]
 [ext_resource type="PackedScene" uid="uid://c10t3xhlchnw2" path="res://Scenes/Environment/Plants/TestPlant.tscn" id="5_v1gob"]
 
@@ -20,12 +21,15 @@ z_index = 10
 z_as_relative = false
 
 [node name="WorldGenerator" parent="." instance=ExtResource("5_pbw6q")]
+IslandCount = 10
 MinRadius = 150.0
 MaxRadius = 1500.0
-RadialSegments = 128
-NoiseFrequency = 0.8
-NoiseStrength = 0.2
+RadialSegments = 256
+NoiseFrequency = 0.05
 WorldSize = Vector2(4000, 4000)
 PlantPrefabs = [ExtResource("5_v1gob")]
 PlantDensity = Vector2i(8, 16)
 Seed = 1339
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("5_jw32o")

@@ -42,7 +42,7 @@ public partial class WorldGenerator : Node2D
 		noise = new FastNoiseLite
 		{
 			Seed = Seed,
-			NoiseType = FastNoiseLite.NoiseTypeEnum.SimplexSmooth,
+			NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin,
 			Frequency = NoiseFrequency
 		};
 
@@ -57,16 +57,25 @@ public partial class WorldGenerator : Node2D
 		float radius = rng.RandfRange(MinRadius, MaxRadius);
 		Vector2 center = new(rng.RandfRange(-WorldSize.X, WorldSize.X), rng.RandfRange(-WorldSize.Y, WorldSize.Y));
 
+		float baseRadiusX = radius * rng.RandfRange(0.7f, 1.3f); // random stretch on X
+		float baseRadiusY = radius * rng.RandfRange(0.7f, 1.3f); // random stretch on Y
+
+
 		var surfacePoints = new List<Vector2>();
 		for (int j = 0; j < RadialSegments; j++)
 		{
 			float angle = j * Mathf.Tau / RadialSegments;
-			float nx = Mathf.Cos(angle) * radius * NoiseFrequency;
-			float ny = Mathf.Sin(angle) * radius * NoiseFrequency;
-			float deform = 1f + noise.GetNoise2D(nx, ny) * NoiseStrength;
 
-			float r = radius * deform;
-			Vector2 point = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * r;
+			// Elliptical base point
+			Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+			Vector2 ellipseBase = new Vector2(dir.X * baseRadiusX, dir.Y * baseRadiusY);
+
+			// Noise deformation
+			float deform = 1f;
+			deform += noise.GetNoise2D(ellipseBase.X * NoiseFrequency, ellipseBase.Y * NoiseFrequency) * NoiseStrength;
+			deform += noise.GetNoise2D(ellipseBase.X * (NoiseFrequency * 2f), ellipseBase.Y * (NoiseFrequency * 2f)) * (NoiseStrength * 0.5f);
+
+			Vector2 point = center + ellipseBase * deform;
 			surfacePoints.Add(point);
 		}
 

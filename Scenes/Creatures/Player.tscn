@@ -54,7 +54,7 @@ z_as_relative = false
 scale = Vector2(10, 10)
 texture = SubResource("GradientTexture2D_fgvx3")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera" type="Camera2D" parent="."]
 limit_smoothed = true
 position_smoothing_enabled = true
 

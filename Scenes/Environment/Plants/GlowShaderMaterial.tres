@@ -1,0 +1,18 @@
+[gd_resource type="Shader" format=3 uid="uid://265dbavdp7in"]
+
+[resource]
+code = "shader_type canvas_item;
+
+uniform float pulse_speed = 1.0;
+uniform float pulse_strength = 0.25;
+
+void fragment()
+{
+    vec4 tex = texture(TEXTURE, UV);
+    float t = TIME * pulse_speed;
+    float pulse = 1.0 + sin(t) * pulse_strength;
+    COLOR = tex * vec4(vec3(pulse), 1.0);
+    // Add additive-ish glow by brightening:
+    COLOR.rgb += tex.rgb * 0.25 * sin(t * 1.3);
+}
+"

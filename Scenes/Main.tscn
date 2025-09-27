@@ -2,35 +2,30 @@
 
 [ext_resource type="PackedScene" uid="uid://bo3wlbfb6kci3" path="res://Scenes/Creatures/Player.tscn" id="2_idj7w"]
 [ext_resource type="AudioStream" uid="uid://4hmkl3nrbvfr" path="res://Assets/Audio/music/A Moth in Light.wav" id="2_kln2b"]
-[ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="3_kln2b"]
-[ext_resource type="PackedScene" uid="uid://bwhalf3ib6lrr" path="res://Scenes/Map/CaveTilemap.tscn" id="4_rgh2o"]
+[ext_resource type="PackedScene" uid="uid://1n87cnegmqf7" path="res://Scenes/Environment/WorldGenerator.tscn" id="5_pbw6q"]
+[ext_resource type="PackedScene" uid="uid://c10t3xhlchnw2" path="res://Scenes/Environment/Plants/TestPlant.tscn" id="5_v1gob"]
 
 [node name="Node2D" type="Node2D"]
 
 [node name="DirectionalDarkness" type="DirectionalLight2D" parent="."]
-energy = 0.8
+energy = 0.94
 blend_mode = 1
 
 [node name="A_Moth_In_Light" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("2_kln2b")
-
-[node name="LavityLight" parent="." instance=ExtResource("3_kln2b")]
-position = Vector2(151, 96)
-
-[node name="LavityLight2" parent="." instance=ExtResource("3_kln2b")]
-position = Vector2(337, 223)
-scale = Vector2(3, 3)
-
-[node name="LavityLight3" parent="." instance=ExtResource("3_kln2b")]
-position = Vector2(748, 507)
-scale = Vector2(6, 6)
-
-[node name="LavityLight4" parent="." instance=ExtResource("3_kln2b")]
-position = Vector2(1350, 1157)
-scale = Vector2(12, 12)
+autoplay = true
 
 [node name="Player" parent="." instance=ExtResource("2_idj7w")]
 z_index = 10
 z_as_relative = false
 
-[node name="CaveTilemap" parent="." instance=ExtResource("4_rgh2o")]
+[node name="WorldGenerator" parent="." instance=ExtResource("5_pbw6q")]
+MinRadius = 150.0
+MaxRadius = 1500.0
+RadialSegments = 128
+NoiseFrequency = 0.8
+NoiseStrength = 0.2
+WorldSize = Vector2(4000, 4000)
+PlantPrefabs = [ExtResource("5_v1gob")]
+PlantDensity = Vector2i(8, 16)
+Seed = 1339

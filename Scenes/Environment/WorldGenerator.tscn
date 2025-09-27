@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://1n87cnegmqf7"]
+
+[ext_resource type="Script" uid="uid://dmc4v6a7t2duy" path="res://Scenes/Environment/WorldGenerator.cs" id="1_qbm7f"]
+
+[node name="WorldGenerator" type="Node2D"]
+script = ExtResource("1_qbm7f")
+PlantPrefabs = []
+PlantDensity = Vector2i(0, 0)

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Reflection;
 
 public partial class Player : CharacterBody2D
 {
@@ -9,11 +10,13 @@ public partial class Player : CharacterBody2D
 
 	private AnimatedSprite2D Sprite = null;
 	private AudioStreamPlayer WingFlapSounds = null;
+	private Camera2D Camera = null;
 
 	public override void _Ready()
 	{
 		Sprite = GetNode<AnimatedSprite2D>("Sprite");
 		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
+		Camera = GetNode<Camera2D>("Camera");
 	}
 
 
@@ -68,6 +71,7 @@ public partial class Player : CharacterBody2D
 			Velocity = Vector2.Zero;
 		}
 
+
 		bool isZeroApprox = Velocity.IsZeroApprox();
 
 		if (IsInputAdded)
@@ -101,4 +105,20 @@ public partial class Player : CharacterBody2D
 
 		MoveAndSlide();
 	}
+
+	public override void _UnhandledKeyInput(InputEvent @event)
+	{
+		base._UnhandledKeyInput(@event);
+
+		if (@event.IsActionPressed("ZoomIn"))
+		{
+			Camera.Zoom += new Vector2(0.1f, 0.1f);
+		}
+
+		if (@event.IsActionPressed("ZoomOut"))
+		{
+			Camera.Zoom -= new Vector2(0.1f, 0.1f);
+		}
+	}
+
 }

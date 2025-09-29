@@ -4,7 +4,7 @@
 [ext_resource type="AudioStream" uid="uid://4hmkl3nrbvfr" path="res://Assets/Audio/music/A Moth in Light.wav" id="2_kln2b"]
 [ext_resource type="Environment" uid="uid://bfvcvbom7pewe" path="res://Scenes/Environment/WorldEnvironment.tres" id="5_jw32o"]
 [ext_resource type="PackedScene" uid="uid://1n87cnegmqf7" path="res://Scenes/Environment/WorldGenerator.tscn" id="5_pbw6q"]
-[ext_resource type="PackedScene" uid="uid://c10t3xhlchnw2" path="res://Scenes/Environment/Plants/TestPlant.tscn" id="5_v1gob"]
+[ext_resource type="PackedScene" uid="uid://c10t3xhlchnw2" path="res://Scenes/Environment/Plants/TestPlant/TestPlant.tscn" id="5_v1gob"]
 [ext_resource type="Script" uid="uid://btbu44y32eejh" path="res://Scenes/Common/StatsDisplay.cs" id="6_v1gob"]
 [ext_resource type="Texture2D" uid="uid://bqa6koxf6hkc4" path="res://Assets/UI/progress-bar-circle.png" id="7_jw32o"]
 
@@ -21,7 +21,7 @@ autoplay = true
 [node name="Player" parent="." instance=ExtResource("2_idj7w")]
 z_index = 10
 z_as_relative = false
-position = Vector2(392, 213)
+position = Vector2(-618, 609)
 
 [node name="WorldGenerator" parent="." instance=ExtResource("5_pbw6q")]
 IslandCount = 10
@@ -32,7 +32,6 @@ NoiseFrequency = 0.05
 WorldSize = Vector2(4000, 4000)
 PlantPrefabs = [ExtResource("5_v1gob")]
 PlantDensity = Vector2i(8, 16)
-Seed = 1339
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("5_jw32o")

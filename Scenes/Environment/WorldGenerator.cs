@@ -19,17 +19,15 @@ public partial class WorldGenerator : Node2D
 	[Export] public Vector2I PlantDensity = new(8, 16); // how many plants per island
 	[Export] public float PlantJitter = 12f;
 
-	[Export] public int Seed = 1337;
-
 	private Vector2 minExtent = Vector2.Inf;
 	private Vector2 maxExtent = -Vector2.Inf;
 
-	private RandomNumberGenerator rng = new();
+	private RandomNumberGenerator rng = null;
 	private FastNoiseLite noise;
 
 	public override void _Ready()
 	{
-		rng.Seed = (ulong)Seed;
+		rng = GetNode<RngManager>("/root/RngManager").Rng;
 		Generate();
 	}
 
@@ -41,7 +39,7 @@ public partial class WorldGenerator : Node2D
 
 		noise = new FastNoiseLite
 		{
-			Seed = Seed,
+			Seed = (int)rng.Seed,
 			NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin,
 			Frequency = NoiseFrequency
 		};

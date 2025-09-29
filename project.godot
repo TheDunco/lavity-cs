@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 StatsManager="*res://Globals/StatsManager.cs"
 SpawnManager="*res://Globals/SpawnManager.cs"
+RngManager="*res://Globals/RngManager.cs"
 
 [dotnet]
 

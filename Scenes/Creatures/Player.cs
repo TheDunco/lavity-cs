@@ -29,7 +29,7 @@ public partial class Player : CharacterBody2D
 	// Camera
 	private Camera2D Camera = null;
 	[Export] public float ZoomSpeed = 1f;     // How fast zoom target changes when holding
-	[Export] public float MinZoom = 0.25f;       // Minimum zoom factor
+	[Export] public float MinZoom = 0.75f;       // Minimum zoom factor
 	[Export] public float MaxZoom = 2.0f;       // Maximum zoom factor
 	[Export] public float ZoomTweenTime = 0.01f; // Time for smooth interpolation
 	private Vector2 targetZoom;
@@ -46,7 +46,7 @@ public partial class Player : CharacterBody2D
 		targetZoom = Camera.Zoom;
 		PlayerLight = GetNode<PointLight2D>("PlayerLight");
 
-		Energy = MaxEnergy * 0.25;
+		Energy = MaxEnergy * 0.75;
 		Health = MaxHealth;
 
 		var statsManager = GetNode<StatsManager>("/root/StatsManager");

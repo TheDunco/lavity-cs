@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://f5vi3ttd0xuv"]
+
+[ext_resource type="Shader" uid="uid://265dbavdp7in" path="res://Scenes/Environment/Plants/GlowShaderMaterial.tres" id="1_ycucx"]
+
+[resource]
+shader = ExtResource("1_ycucx")
+shader_parameter/pulse_speed = 1.0
+shader_parameter/pulse_strength = 0.25

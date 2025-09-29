@@ -1,24 +1,19 @@
-[gd_scene load_steps=9 format=3 uid="uid://c10t3xhlchnw2"]
+[gd_scene load_steps=8 format=3 uid="uid://c10t3xhlchnw2"]
 
 [ext_resource type="Script" uid="uid://dlo4lsyhsuol0" path="res://Scenes/Environment/Plants/TestPlant/TestPlant.cs" id="1_obggo"]
 [ext_resource type="Texture2D" uid="uid://bplw6fyv5ttx5" path="res://Assets/Environment/Plants/stem_01.png" id="2_2kove"]
-[ext_resource type="Shader" uid="uid://265dbavdp7in" path="res://Scenes/Environment/Plants/GlowShaderMaterial.tres" id="2_2oilu"]
 [ext_resource type="PackedScene" uid="uid://cnbcmqfqfiiy4" path="res://Scenes/Environment/Plants/TestPlant/TestPlantConsumable.tscn" id="2_ja7gv"]
 [ext_resource type="Texture2D" uid="uid://l240qbat43je" path="res://Assets/Environment/Plants/leaf_01.png" id="3_j4ai4"]
+[ext_resource type="Material" uid="uid://f5vi3ttd0xuv" path="res://Materials/GlowShaderMaterial.tres" id="3_ja7gv"]
 [ext_resource type="Texture2D" uid="uid://boi0trabaks3s" path="res://Assets/Environment/Plants/blossom_02.png" id="4_2oilu"]
 [ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="6_2oilu"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4l182"]
-shader = ExtResource("2_2oilu")
-shader_parameter/pulse_speed = 1.0
-shader_parameter/pulse_strength = 0.25
 
 [node name="TestPlant" type="Node2D"]
 script = ExtResource("1_obggo")
 Consumable = ExtResource("2_ja7gv")
 
 [node name="Stem01" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_4l182")
+material = ExtResource("3_ja7gv")
 position = Vector2(-5, -70)
 scale = Vector2(0.159866, 0.171417)
 texture = ExtResource("2_2kove")

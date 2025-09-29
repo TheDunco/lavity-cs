@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 public partial class Player : CharacterBody2D
 {
@@ -19,7 +20,8 @@ public partial class Player : CharacterBody2D
 	private bool IsInputAdded = false;
 
 	// Movement
-	private int Acceleration = 1000;
+	private readonly static int BaseAcceleration = 1000;
+	private int Acceleration = BaseAcceleration;
 	private float AirResistance = 0.0002f;
 	private float MaxVelocity = 1500;
 
@@ -29,7 +31,7 @@ public partial class Player : CharacterBody2D
 	// Camera
 	private Camera2D Camera = null;
 	[Export] public float ZoomSpeed = 1f;     // How fast zoom target changes when holding
-	[Export] public float MinZoom = 0.75f;       // Minimum zoom factor
+	[Export] public float MinZoom = 0.5f;       // Minimum zoom factor
 	[Export] public float MaxZoom = 2.0f;       // Maximum zoom factor
 	[Export] public float ZoomTweenTime = 0.01f; // Time for smooth interpolation
 	private Vector2 targetZoom;
@@ -46,7 +48,7 @@ public partial class Player : CharacterBody2D
 		targetZoom = Camera.Zoom;
 		PlayerLight = GetNode<PointLight2D>("PlayerLight");
 
-		Energy = MaxEnergy * 0.75;
+		Energy = MaxEnergy * 0.1;
 		Health = MaxHealth;
 
 		var statsManager = GetNode<StatsManager>("/root/StatsManager");
@@ -59,7 +61,6 @@ public partial class Player : CharacterBody2D
 
 	private void OnStatsTick()
 	{
-		GD.Print("Stats Tick || ", "Health: ", Health, " Energy: ", Energy);
 		// Start from current values
 		double newEnergy = Energy;
 		double newHealth = Health;
@@ -93,12 +94,12 @@ public partial class Player : CharacterBody2D
 				Stomach.RemoveAt(i);
 		}
 
-		// Health-energy interactions
-		if (newEnergy <= 1.0)
+		if (newEnergy <= 0.0)
 		{
-			newHealth -= 1.0;
+			newHealth -= Math.Abs(newEnergy);
 		}
-		else if (newEnergy >= MaxEnergy * 0.5 && newHealth < MaxHealth)
+		// slow passive health regen
+		else if (newEnergy >= MaxEnergy * 0.95 && newHealth < MaxHealth)
 		{
 			newHealth += 0.5;
 		}
@@ -106,6 +107,12 @@ public partial class Player : CharacterBody2D
 		// Clamp values
 		Energy = Mathf.Clamp(newEnergy, 0, MaxEnergy);
 		Health = Mathf.Clamp(newHealth, 0, MaxHealth);
+
+		if (Health == 0)
+		{
+			GetTree().Quit();
+		}
+		Acceleration = (int)Mathf.Remap(Energy, 0f, 100f, 0.5 * BaseAcceleration, 1.25 * BaseAcceleration);
 	}
 
 	private void OrientByRotation()

@@ -50,35 +50,11 @@ public partial class Player : CharacterBody2D
 		Health = MaxHealth;
 
 		var statsManager = GetNode<StatsManager>("/root/StatsManager");
-		statsManager.Tick += OnStatsTick;
+		statsManager.StatsTick += OnStatsTick;
 	}
 	public void EatPlant(PlantEffect effect)
 	{
 		Stomach.Add(effect);
-	}
-
-	// Not Working
-	public void TweenStatsToTarget(double newEnergy, double newHealth)
-	{
-		// Clamp values
-		newEnergy = Mathf.Clamp(newEnergy, 0, MaxEnergy);
-		newHealth = Mathf.Clamp(newHealth, 0, MaxHealth);
-
-		// Kill any existing tween
-		statTween?.Kill();
-
-		// Create new tween to move values smoothly
-		statTween = CreateTween();
-		statTween.TweenProperty(this, "Energy", newEnergy, 1.0)
-				 .SetTrans(Tween.TransitionType.Sine)
-				 .SetEase(Tween.EaseType.InOut);
-		statTween.TweenProperty(this, "Health", newHealth, 1.0)
-				 .SetTrans(Tween.TransitionType.Sine)
-				 .SetEase(Tween.EaseType.InOut);
-
-		// Store pending values so UI can use them if needed
-		pendingEnergy = newEnergy;
-		pendingHealth = newHealth;
 	}
 
 	private void OnStatsTick()
@@ -127,10 +103,9 @@ public partial class Player : CharacterBody2D
 			newHealth += 0.5;
 		}
 
-		Energy = newEnergy;
-		Health = newHealth;
-		// TweenStatsToTarget(newEnergy, newHealth);
-
+		// Clamp values
+		Energy = Mathf.Clamp(newEnergy, 0, MaxEnergy);
+		Health = Mathf.Clamp(newHealth, 0, MaxHealth);
 	}
 
 	private void OrientByRotation()
@@ -243,7 +218,16 @@ public partial class Player : CharacterBody2D
 
 		Velocity += GetGravity();
 
-		MoveAndSlide();
+		bool didCollide = MoveAndSlide();
+
+		if (didCollide)
+		{
+			var collision = this.GetLastSlideCollision();
+			if (collision.GetCollider() is Consumable consumableCollision)
+			{
+				EatPlant(consumableCollision.OnConsume());
+			}
+		}
 	}
 
 	public override void _UnhandledInput(InputEvent @event)

@@ -4,7 +4,7 @@ using System;
 
 public partial class StatsManager : Node
 {
-	[Signal] public delegate void TickEventHandler();
+	[Signal] public delegate void StatsTickEventHandler();
 
 	private Timer StatsTimer;
 
@@ -16,7 +16,7 @@ public partial class StatsManager : Node
 			OneShot = false,
 			Autostart = true
 		};
-		StatsTimer.Timeout += () => EmitSignal(SignalName.Tick);
+		StatsTimer.Timeout += () => EmitSignal(SignalName.StatsTick);
 		AddChild(StatsTimer);
 	}
 }
@@ -28,7 +28,12 @@ public class PlantEffect
 	public double EnergyMod; // per second
 	public double HealthMod; // per second
 
-	public PlantEffect(string name, double duration, double eMod = 0, double hMod = 0)
+	public PlantEffect()
+	{
+	}
+
+
+	public PlantEffect(string name = "Default Plant Effect", double duration = 1.0, double eMod = 0, double hMod = 0)
 	{
 		Name = name;
 		Duration = duration;

@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://c10t3xhlchnw2"]
+[gd_scene load_steps=9 format=3 uid="uid://c10t3xhlchnw2"]
 
 [ext_resource type="Script" uid="uid://dlo4lsyhsuol0" path="res://Scenes/Environment/Plants/TestPlant.cs" id="1_obggo"]
 [ext_resource type="Texture2D" uid="uid://bplw6fyv5ttx5" path="res://Assets/Environment/Plants/stem_01.png" id="2_2kove"]
 [ext_resource type="Shader" uid="uid://265dbavdp7in" path="res://Scenes/Environment/Plants/GlowShaderMaterial.tres" id="2_2oilu"]
+[ext_resource type="PackedScene" uid="uid://c6doma8aaviu8" path="res://Scenes/Environment/Consumable.tscn" id="2_4l182"]
 [ext_resource type="Texture2D" uid="uid://l240qbat43je" path="res://Assets/Environment/Plants/leaf_01.png" id="3_j4ai4"]
 [ext_resource type="Texture2D" uid="uid://boi0trabaks3s" path="res://Assets/Environment/Plants/blossom_02.png" id="4_2oilu"]
 [ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="6_2oilu"]
@@ -14,6 +15,7 @@ shader_parameter/pulse_strength = 0.25
 
 [node name="TestPlant" type="Node2D"]
 script = ExtResource("1_obggo")
+SeedConsumable = ExtResource("2_4l182")
 
 [node name="Stem01" type="Sprite2D" parent="."]
 material = SubResource("ShaderMaterial_4l182")

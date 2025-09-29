@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://c6doma8aaviu8"]
+
+[ext_resource type="Script" uid="uid://dqc3kgiyjk6d3" path="res://Scenes/Environment/Consumable.cs" id="1_vgf07"]
+[ext_resource type="Texture2D" uid="uid://dbeu5fr7dltto" path="res://Assets/Environment/Plants/blossom_01.png" id="2_12hkl"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vgf07"]
+radius = 24.0208
+
+[node name="Consumable" type="RigidBody2D"]
+collision_layer = 3
+script = ExtResource("1_vgf07")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vgf07")
+
+[node name="Blossom01" type="Sprite2D" parent="."]
+position = Vector2(0.750001, -0.625)
+scale = Vector2(0.221429, 0.218254)
+texture = ExtResource("2_12hkl")

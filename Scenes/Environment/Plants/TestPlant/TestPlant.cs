@@ -28,7 +28,7 @@ public partial class TestPlant : Plant
 		{
 			Consumable NewConsumable = (Consumable)Consumable.Instantiate();
 			NewConsumable.SetEffect(ConsumableEffect);
-			NewConsumable.Position = LavityLight.Position;
+			NewConsumable.Position = LavityLight.Position + new Vector2(rng.RandiRange(-2, 2), rng.RandiRange(-2, 2));
 			Consumables.Add(NewConsumable);
 			AddChild(NewConsumable);
 		}

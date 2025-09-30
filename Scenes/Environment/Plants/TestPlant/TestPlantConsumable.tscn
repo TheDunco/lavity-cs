@@ -8,8 +8,9 @@
 radius = 24.0208
 
 [node name="TestConsumable" type="RigidBody2D"]
-collision_layer = 3
-mass = 0.03
+collision_layer = 7
+mass = 0.003
+gravity_scale = 1000.0
 script = ExtResource("1_kchmd")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 
 public partial class GravityCancellation : Node
@@ -94,9 +95,14 @@ public partial class GravityCancellation : Node
 	}
 }
 
+
 public partial class LavityLight : Node2D
 {
 	private Area2D GravityArea = null;
+	private PointLight2D Light = null;
+	[Export(PropertyHint.Layers2DPhysics)] private uint CollisionLayer;
+	[Export(PropertyHint.Layers2DPhysics)] private uint CollisionMask;
+	[Export] private int PointUnitDistance = 0;
 	private List<GravityCancellation> GravityCancellationList = [];
 
 	private void RemoveBodyFromCancellationList(CharacterBody2D characterBody)
@@ -110,11 +116,49 @@ public partial class LavityLight : Node2D
 		}
 	}
 
+	public bool IsEnabled()
+	{
+		return Light.Enabled;
+	}
+
+	public void TurnOff()
+	{
+		Light.Enabled = false;
+		GravityArea.ProcessMode = ProcessModeEnum.Disabled;
+	}
+
+	public void TurnOn()
+	{
+		Light.Enabled = true;
+		GravityArea.ProcessMode = ProcessModeEnum.Always;
+	}
+
+	public void Toggle()
+	{
+		if (Light.Enabled)
+			TurnOff();
+		else TurnOn();
+	}
+
 	public override void _Ready()
 	{
 		base._Ready();
 
 		GravityArea = GetNode<Area2D>("GravityArea");
+		Light = GetNode<PointLight2D>("LavityPointLight");
+
+		if (CollisionMask != 0)
+		{
+			GravityArea.CollisionMask = CollisionMask;
+		}
+		if (CollisionLayer != 0)
+		{
+			GravityArea.CollisionLayer = CollisionLayer;
+		}
+		if (PointUnitDistance != 0)
+		{
+			GravityArea.GravityPointUnitDistance = PointUnitDistance;
+		}
 		GravityArea.BodyEntered += (body) =>
 		{
 			if (body is CharacterBody2D characterBody)

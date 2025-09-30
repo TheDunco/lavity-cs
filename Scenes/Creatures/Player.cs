@@ -38,7 +38,7 @@ public partial class Player : CharacterBody2D
 	private Tween zoomTween;
 
 	// Light
-	private PointLight2D PlayerLight = null;
+	private LavityLight PlayerLight = null;
 
 	public override void _Ready()
 	{
@@ -46,9 +46,9 @@ public partial class Player : CharacterBody2D
 		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
 		Camera = GetNode<Camera2D>("Camera");
 		targetZoom = Camera.Zoom;
-		PlayerLight = GetNode<PointLight2D>("PlayerLight");
+		PlayerLight = GetNode<LavityLight>("LavityLight");
 
-		Energy = MaxEnergy * 0.1;
+		Energy = MaxEnergy * 0.75;
 		Health = MaxHealth;
 
 		var statsManager = GetNode<StatsManager>("/root/StatsManager");
@@ -66,7 +66,7 @@ public partial class Player : CharacterBody2D
 		double newHealth = Health;
 
 		// Passive drain if light is on
-		if (PlayerLight.Enabled)
+		if (PlayerLight.IsEnabled())
 			newEnergy -= 0.5;
 
 		if (IsInputAdded)
@@ -243,7 +243,7 @@ public partial class Player : CharacterBody2D
 
 		if (@event.IsActionPressed("ToggleLight"))
 		{
-			PlayerLight.Enabled = !PlayerLight.Enabled;
+			PlayerLight.Toggle();
 		}
 	}
 

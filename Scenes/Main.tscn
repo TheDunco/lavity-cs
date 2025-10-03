@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://brmf752ifplp0"]
+[gd_scene load_steps=10 format=3 uid="uid://brmf752ifplp0"]
 
 [ext_resource type="Script" uid="uid://xnmxsimfjq8h" path="res://Scenes/WorldManager.cs" id="1_50glp"]
 [ext_resource type="PackedScene" uid="uid://bo3wlbfb6kci3" path="res://Scenes/Creatures/Player.tscn" id="2_idj7w"]
@@ -9,9 +9,13 @@
 [ext_resource type="Texture2D" uid="uid://bqa6koxf6hkc4" path="res://Assets/UI/progress-bar-circle.png" id="7_jw32o"]
 [ext_resource type="Texture2D" uid="uid://ddxv2qx6a10xw" path="res://Assets/UI/progress-bar-frame.png" id="8_50glp"]
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_50glp"]
+noise_type = 3
+
 [node name="WorldManager" type="Node2D"]
 script = ExtResource("1_50glp")
 PlantPrefabs = Array[PackedScene]([ExtResource("5_v1gob")])
+noise = SubResource("FastNoiseLite_50glp")
 
 [node name="DirectionalDarkness" type="DirectionalLight2D" parent="."]
 energy = 0.94

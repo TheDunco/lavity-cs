@@ -7,15 +7,15 @@ public partial class WorldManager : Node2D
 	[Export] public int WorldWidth = 100000;
 	[Export] public int WorldHeight = 100000;
 	[Export] public int IslandCount = 5000;
-	[Export] public float MinRadius = 50f;
-	[Export] public float MaxRadius = 1000f;
-	[Export] public float RenderDistance = 4000f;
-
+	[Export] public float MinRadius = 100;
+	[Export] public float MaxRadius = 500;
+	[Export] public float RenderDistance = 7000f;
+	[Export] public float IslandPadding = 100f;
 	[Export] public PackedScene[] PlantPrefabs;
 
-	private List<Island> islands = new();
+	private List<Island> Islands = new();
 	private Node2D player;
-	private FastNoiseLite noise;
+	[Export] public FastNoiseLite noise;
 	private RandomNumberGenerator rng;
 
 	public override void _Ready()
@@ -24,39 +24,53 @@ public partial class WorldManager : Node2D
 		player = GetNode<Node2D>("Player");
 
 		// Setup noise
-		noise = new FastNoiseLite
-		{
-			Seed = (int)rng.Seed,
-			NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin,
-			Frequency = 0.05f
-		};
+		noise.Seed = (int)rng.Seed;
 
-		GenerateWorldMetadata();
+		Islands = GenerateIslands();
 	}
 
-	private void GenerateWorldMetadata()
+	public List<Island> GenerateIslands()
 	{
-		islands.Clear();
-		for (int i = 0; i < IslandCount; i++)
-		{
-			Vector2 pos = new(
-				rng.RandfRange(-WorldWidth / 2, WorldWidth / 2),
-				rng.RandfRange(-WorldHeight / 2, WorldHeight / 2)
-			);
-			float radius = rng.RandfRange(MinRadius, MaxRadius);
-			ulong seed = rng.Randi();
+		var islands = new List<Island>();
 
-			islands.Add(new Island(pos, radius, seed));
+		int attempts = 0;
+		while (islands.Count < IslandCount && attempts < IslandCount * 20) // prevent infinite loop
+		{
+			attempts++;
+
+			Vector2 center = new Vector2(
+				rng.RandfRange(-WorldWidth, WorldWidth),
+				rng.RandfRange(-WorldHeight, WorldHeight)
+			);
+
+			float radius = rng.RandfRange(MinRadius, MaxRadius); // tweak min/max radius
+
+			// check against existing islands
+			bool overlaps = false;
+			foreach (var other in islands)
+			{
+				float minDist = radius + other.Radius + IslandPadding;
+				if (center.DistanceTo(other.Center) < minDist)
+				{
+					overlaps = true;
+					break;
+				}
+			}
+
+			if (overlaps) continue;
+
+			islands.Add(new Island(center, radius, (ulong)rng.Randi()));
 		}
 
-		GD.Print($"Generated {islands.Count} islands for the world.");
+		GD.Print($"Placed {islands.Count} islands after {attempts} attempts.");
+		return islands;
 	}
 
 	public override void _Process(double delta)
 	{
 		Vector2 playerPos = player.GlobalPosition;
 
-		foreach (var island in islands)
+		foreach (var island in Islands)
 		{
 			float dist = playerPos.DistanceTo(island.Center);
 

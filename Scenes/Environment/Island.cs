@@ -83,7 +83,6 @@ public class Island
 				int idx = rng.RandiRange(0, surfacePoints.Count - 1);
 				Vector2 pos = surfacePoints[idx];
 				Vector2 normal = (pos - Center).Normalized();
-				pos += normal * rng.RandfRange(-12f, 12f); // jitter
 
 				var prefab = plantPrefabs[rng.RandiRange(0, plantPrefabs.Length - 1)];
 				var plant = prefab.Instantiate<Node2D>();

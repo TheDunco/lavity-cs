@@ -11,6 +11,8 @@
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_50glp"]
 noise_type = 3
+frequency = 0.002
+fractal_gain = 0.2
 
 [node name="WorldManager" type="Node2D"]
 script = ExtResource("1_50glp")

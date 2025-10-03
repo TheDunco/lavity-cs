@@ -230,7 +230,7 @@ public partial class Player : CharacterBody2D
 		if (didCollide)
 		{
 			var collision = this.GetLastSlideCollision();
-			if (collision.GetCollider() is Consumable consumableCollision)
+			if (collision.GetCollider() is Consumable consumableCollision && !PlayerLight.IsEnabled())
 			{
 				EatPlant(consumableCollision.OnConsume());
 			}

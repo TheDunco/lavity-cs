@@ -2,40 +2,21 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-[Tool]
 public partial class WorldGenerator : Node2D
 {
-	// === Island Settings ===
-	[Export] public int IslandCount = 5;
-	[Export] public float MinRadius = 80f;
-	[Export] public float MaxRadius = 200f;
-	[Export] public int RadialSegments = 64; // how smooth each island is
-	[Export] public float NoiseFrequency = 1.0f;
-	[Export] public float NoiseStrength = 0.3f;
-	[Export] public Vector2 WorldSize = new(2000, 1200);
-
-	// === Plant Settings ===
 	[Export] public PackedScene[] PlantPrefabs;
-	[Export] public Vector2I PlantDensity = new(8, 16); // how many plants per island
+	[Export] public Vector2I PlantDensity = new(5, 15);
 	[Export] public float PlantJitter = 12f;
+	[Export] public float NoiseFrequency = 0.05f;
+	[Export] public float NoiseStrength = 0.3f;
+	[Export] public int RadialSegments = 256;
 
-	private Vector2 minExtent = Vector2.Inf;
-	private Vector2 maxExtent = -Vector2.Inf;
-
-	private RandomNumberGenerator rng = null;
+	private RandomNumberGenerator rng;
 	private FastNoiseLite noise;
 
 	public override void _Ready()
 	{
 		rng = GetNode<RngManager>("/root/RngManager").Rng;
-		Generate();
-	}
-
-	public void Generate()
-	{
-		// Clear previous
-		foreach (Node child in GetChildren())
-			child.QueueFree();
 
 		noise = new FastNoiseLite
 		{
@@ -43,32 +24,27 @@ public partial class WorldGenerator : Node2D
 			NoiseType = FastNoiseLite.NoiseTypeEnum.Perlin,
 			Frequency = NoiseFrequency
 		};
-
-		for (int i = 0; i < IslandCount; i++)
-		{
-			GenerateIsland();
-		}
 	}
 
-	private void GenerateIsland()
+	public void RenderIslandsInArea(Rect2 area, List<(Vector2 center, float radius)> islands)
 	{
-		float radius = rng.RandfRange(MinRadius, MaxRadius);
-		Vector2 center = new(rng.RandfRange(-WorldSize.X, WorldSize.X), rng.RandfRange(-WorldSize.Y, WorldSize.Y));
+		GD.Print($"[WorldGenerator] Rendering {islands.Count} islands in {area}");
+		foreach (var (center, radius) in islands)
+			GenerateIsland(center, radius);
+	}
 
-		float baseRadiusX = radius * rng.RandfRange(0.7f, 1.3f); // random stretch on X
-		float baseRadiusY = radius * rng.RandfRange(0.7f, 1.3f); // random stretch on Y
-
+	private void GenerateIsland(Vector2 center, float radius)
+	{
+		float baseRadiusX = radius * rng.RandfRange(0.7f, 1.3f);
+		float baseRadiusY = radius * rng.RandfRange(0.7f, 1.3f);
 
 		var surfacePoints = new List<Vector2>();
 		for (int j = 0; j < RadialSegments; j++)
 		{
 			float angle = j * Mathf.Tau / RadialSegments;
+			Vector2 dir = new(Mathf.Cos(angle), Mathf.Sin(angle));
+			Vector2 ellipseBase = new(dir.X * baseRadiusX, dir.Y * baseRadiusY);
 
-			// Elliptical base point
-			Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-			Vector2 ellipseBase = new Vector2(dir.X * baseRadiusX, dir.Y * baseRadiusY);
-
-			// Noise deformation
 			float deform = 1f;
 			deform += noise.GetNoise2D(ellipseBase.X * NoiseFrequency, ellipseBase.Y * NoiseFrequency) * NoiseStrength;
 			deform += noise.GetNoise2D(ellipseBase.X * (NoiseFrequency * 2f), ellipseBase.Y * (NoiseFrequency * 2f)) * (NoiseStrength * 0.5f);
@@ -77,59 +53,42 @@ public partial class WorldGenerator : Node2D
 			surfacePoints.Add(point);
 		}
 
-		foreach (var pt in surfacePoints)
+		var poly = new Polygon2D
 		{
-			minExtent = new Vector2(Mathf.Min(minExtent.X, pt.X), Mathf.Min(minExtent.Y, pt.Y));
-			maxExtent = new Vector2(Mathf.Max(maxExtent.X, pt.X), Mathf.Max(maxExtent.Y, pt.Y));
-		}
-
-		// Build polygon for island fill
-		var poly = new List<Vector2>(surfacePoints);
-		var islandPoly = new Polygon2D
-		{
-			Polygon = poly.ToArray(),
+			Polygon = [.. surfacePoints],
 			Color = new Color(0.12f, 0.12f, 0.18f, 1f)
 		};
-		AddChild(islandPoly);
+		AddChild(poly);
 
-		// Add collision
 		var body = new StaticBody2D();
 		var collision = new CollisionPolygon2D
 		{
-			Polygon = poly.ToArray()
+			Polygon = [.. surfacePoints]
 		};
 		body.AddChild(collision);
 		AddChild(body);
 
-		// Add Light Occlusion 
 		var occluder = new LightOccluder2D();
 		var occPoly = new OccluderPolygon2D
 		{
-			Polygon = poly.ToArray()
+			Polygon = [.. surfacePoints]
 		};
 		occluder.Occluder = occPoly;
 		AddChild(occluder);
 
-		// === Place Plants ===
 		if (PlantPrefabs.Length > 0)
 		{
 			for (int k = 0; k < rng.RandiRange(PlantDensity.X, PlantDensity.Y); k++)
 			{
-				// Pick a random surface point
 				int idx = rng.RandiRange(0, surfacePoints.Count - 1);
 				Vector2 pos = surfacePoints[idx];
-
-				// Normal points outward from island center
 				Vector2 normal = (pos - center).Normalized();
-
-				// Apply jitter
 				pos += normal * rng.RandfRange(-PlantJitter, PlantJitter);
 
-				// Instantiate plant
 				var prefab = PlantPrefabs[rng.RandiRange(0, PlantPrefabs.Length - 1)];
 				var plant = prefab.Instantiate<Node2D>();
 				plant.Position = pos;
-				plant.Rotation = normal.Angle() + Mathf.Pi / 2f; // stem outward
+				plant.Rotation = normal.Angle() + Mathf.Pi / 2f;
 				AddChild(plant);
 			}
 		}

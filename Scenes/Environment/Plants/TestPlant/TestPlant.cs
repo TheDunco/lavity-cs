@@ -24,6 +24,12 @@ public partial class TestPlant : Plant
 			return;
 		}
 
+		if (!GodotObject.IsInstanceValid(LavityLight))
+		{
+			LavityLight = null;
+			return;
+		}
+
 		if (rng.RandiRange(0, 100) < ConsumableSpawnChance)
 		{
 			Consumable NewConsumable = (Consumable)Consumable.Instantiate();

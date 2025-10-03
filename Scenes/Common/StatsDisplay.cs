@@ -11,8 +11,8 @@ public partial class StatsDisplay : CanvasLayer
 	public override void _Ready()
 	{
 		base._Ready();
-		HealthProgress = GetChild<TextureProgressBar>(0);
-		EnergyProgress = GetChild<TextureProgressBar>(1);
+		EnergyProgress = GetNode<TextureProgressBar>("VBoxContainer/HBoxContainer/EnergyProgress");
+		HealthProgress = GetNode<TextureProgressBar>("VBoxContainer/HBoxContainer/HealthProgress");
 
 		HealthProgress.MaxValue = Player.MaxHealth;
 		EnergyProgress.MaxValue = Player.MaxEnergy;

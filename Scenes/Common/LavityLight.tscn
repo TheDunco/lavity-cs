@@ -12,7 +12,6 @@ script = ExtResource("1_h3hlx")
 [node name="LavityPointLight" type="PointLight2D" parent="."]
 scale = Vector2(2, 2)
 shadow_enabled = true
-shadow_filter = 1
 shadow_filter_smooth = 32.0
 texture = ExtResource("1_24a55")
 

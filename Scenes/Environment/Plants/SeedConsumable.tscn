@@ -8,7 +8,7 @@
 radius = 11.932
 height = 36.4453
 
-[node name="TestConsumable" type="RigidBody2D"]
+[node name="SeedConsumable" type="RigidBody2D"]
 collision_layer = 7
 mass = 0.003
 gravity_scale = 1000.0
@@ -20,10 +20,9 @@ scale = Vector2(0.340426, 0.338462)
 texture = ExtResource("2_djlev")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-scale = Vector2(0.75, 0.75)
+scale = Vector2(0.3, 0.3)
 energy = 0.33
 texture = ExtResource("3_0dprk")
-texture_scale = 0.25
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1)

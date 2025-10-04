@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://s43hmwfl4ho5"]
+[gd_scene load_steps=10 format=3 uid="uid://s43hmwfl4ho5"]
 
 [ext_resource type="Script" uid="uid://dmfa5w1ickuvb" path="res://Scenes/Environment/Plants/Plant.cs" id="1_erteu"]
 [ext_resource type="PackedScene" uid="uid://cnbcmqfqfiiy4" path="res://Scenes/Environment/Plants/SeedConsumable.tscn" id="2_ddeqk"]
+[ext_resource type="Material" uid="uid://f5vi3ttd0xuv" path="res://Materials/GlowShaderMaterial.tres" id="3_ddeqk"]
 [ext_resource type="Texture2D" uid="uid://c0junffo63ek6" path="res://Assets/Environment/Plants/bud_02.png" id="3_eafl1"]
 [ext_resource type="Texture2D" uid="uid://d2emlluupxa4h" path="res://Assets/Environment/Plants/leaf_04.png" id="4_p2uhs"]
 [ext_resource type="Texture2D" uid="uid://dqgyyuqiv4cq8" path="res://Assets/Environment/Plants/bud_04.png" id="5_mpg71"]
@@ -12,20 +13,24 @@
 [node name="NormalPlant1" type="Node2D"]
 script = ExtResource("1_erteu")
 Consumable = ExtResource("2_ddeqk")
-ConsumableName = "NormalPlant1 Consumable"
-ConsumableDuration = 15
-ConsumableEnergyMod = 4
-ConsumableSpawnChance = 1
-MaxConsumables = 2
-ConsumableModulate = Color(0.627291, 0.409559, 0.094749, 0)
+ConsumableName = "Quick Hitter (12)"
+ConsumableDuration = 2
+ConsumableEnergyMod = 6.0
+ConsumableHealthMod = 3.0
+ConsumableStomachSpace = 40.0
+ConsumableSpawnChance = 3
+MaxConsumables = 1
+ConsumableModulate = Color(1, 1, 0, 1)
 
 [node name="Bud02" type="Sprite2D" parent="."]
+material = ExtResource("3_ddeqk")
 position = Vector2(-16, -73)
 rotation = -0.547217
 scale = Vector2(0.166955, 0.140487)
 texture = ExtResource("3_eafl1")
 
 [node name="Leaf04" type="Sprite2D" parent="."]
+material = ExtResource("3_ddeqk")
 position = Vector2(-24, -27)
 rotation = -0.580305
 scale = Vector2(0.212085, 0.161439)
@@ -34,6 +39,7 @@ region_enabled = true
 region_rect = Rect2(-0.5, 0, 211.5, 421.5)
 
 [node name="Leaf04_2" type="Sprite2D" parent="."]
+material = ExtResource("3_ddeqk")
 position = Vector2(22, -35)
 rotation = 0.935978
 scale = Vector2(0.212085, 0.161439)
@@ -42,23 +48,27 @@ region_enabled = true
 region_rect = Rect2(-0.5, 0, 211.5, 421.5)
 
 [node name="Bud04" type="Sprite2D" parent="."]
+material = ExtResource("3_ddeqk")
 position = Vector2(5, -71)
 scale = Vector2(0.172886, 0.158257)
 texture = ExtResource("5_mpg71")
 
 [node name="Bud04_2" type="Sprite2D" parent="."]
+material = ExtResource("3_ddeqk")
 position = Vector2(-14, -117)
 rotation = -0.728859
 scale = Vector2(0.266169, 0.249235)
 texture = ExtResource("5_mpg71")
 
 [node name="Stem03" type="Sprite2D" parent="."]
+material = ExtResource("3_ddeqk")
 position = Vector2(-4, -91)
 scale = Vector2(0.52621, 0.492958)
 texture = ExtResource("6_7db4p")
 
 [node name="Blossom02" type="Sprite2D" parent="."]
 modulate = Color(0.879613, 0.930086, 7.70092e-07, 1)
+material = ExtResource("3_ddeqk")
 position = Vector2(-0.999994, -116)
 scale = Vector2(0.257853, 0.260695)
 texture = ExtResource("7_mo25d")

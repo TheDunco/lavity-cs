@@ -58,6 +58,17 @@ scale = Vector2(0.5, 0.5)
 layout_mode = 2
 theme_override_constants/separation = 12
 
+[node name="StomachProgress" type="TextureProgressBar" parent="StatsDisplay/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+value = 30.0
+fill_mode = 4
+texture_under = ExtResource("7_jw32o")
+texture_over = ExtResource("8_50glp")
+texture_progress = ExtResource("7_jw32o")
+tint_under = Color(0.0823529, 0.0823529, 0.0823529, 0.117647)
+tint_over = Color(0.121569, 0.121569, 0.121569, 0.501961)
+tint_progress = Color(0.190694, 0.345703, 0.133131, 1)
+
 [node name="EnergyProgress" type="TextureProgressBar" parent="StatsDisplay/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 value = 30.0

@@ -8,9 +8,12 @@ public partial class Player : CharacterBody2D
 	// Stats
 	[Export] public double MaxEnergy = 100;
 	[Export] public double MaxHealth = 100;
+	[Export] public double MaxStomachSpace = 100;
+	private int MaxPlantsDigestedPerCycle = 2;
 
 	public double Energy { get; private set; }
 	public double Health { get; private set; }
+	public double Fullness { get; private set; }
 
 	private List<PlantEffect> Stomach = [];
 
@@ -54,13 +57,32 @@ public partial class Player : CharacterBody2D
 		var statsManager = GetNode<StatsManager>("/root/StatsManager");
 		statsManager.StatsTick += OnStatsTick;
 	}
+	public double GetCurrentFullness()
+	{
+		double fullness = 0;
+		foreach (var effect in Stomach)
+		{
+			fullness += effect.StomachSpace;
+		}
+		return fullness;
+	}
 	public void EatPlant(PlantEffect effect)
 	{
-		Stomach.Add(effect);
+		double Fullness = GetCurrentFullness();
+		if (Fullness < MaxStomachSpace)
+		{
+
+			Stomach.Add(effect);
+		}
+		else
+		{
+			Health -= Fullness - MaxStomachSpace;
+		}
 	}
 
 	private void OnStatsTick()
 	{
+		Fullness = GetCurrentFullness();
 		// Start from current values
 		double newEnergy = Energy;
 		double newHealth = Health;
@@ -83,6 +105,7 @@ public partial class Player : CharacterBody2D
 		}
 
 		// Digest plants
+		var plantsDigestedThisTick = 0;
 		for (int i = Stomach.Count - 1; i >= 0; i--)
 		{
 			var effect = Stomach[i];
@@ -90,8 +113,15 @@ public partial class Player : CharacterBody2D
 			newHealth += effect.HealthMod;
 
 			effect.Duration -= 1.0;
-			if (effect.Duration <= 0)
+			effect.StomachSpace -= effect.StomachSpace / effect.Duration;
+			plantsDigestedThisTick += 1;
+			if (effect.Duration <= 0 || effect.StomachSpace <= 0)
 				Stomach.RemoveAt(i);
+
+			if (plantsDigestedThisTick >= MaxPlantsDigestedPerCycle)
+			{
+				break;
+			}
 		}
 
 		if (newEnergy <= 0.0)
@@ -99,9 +129,9 @@ public partial class Player : CharacterBody2D
 			newHealth -= Math.Abs(newEnergy);
 		}
 		// slow passive health regen
-		else if (newEnergy >= MaxEnergy * 0.95 && newHealth < MaxHealth)
+		else if (newEnergy >= 99 && Health < MaxHealth)
 		{
-			newHealth += 0.5;
+			newHealth += 0.1;
 		}
 
 		// Clamp values

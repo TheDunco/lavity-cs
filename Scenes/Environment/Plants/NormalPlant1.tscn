@@ -8,10 +8,17 @@
 [ext_resource type="Texture2D" uid="uid://boi0trabaks3s" path="res://Assets/Environment/Plants/blossom_02.png" id="6_yan7l"]
 [ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="7_npb1r"]
 
-[node name="TestPlant" type="Node2D"]
+[node name="NormalPlant1" type="Node2D"]
 script = ExtResource("1_0t5e8")
 Consumable = ExtResource("2_34151")
-ConsumableName = "NormalPlant2 Consumable"
+ConsumableName = "Long (20)"
+ConsumableDuration = 20
+ConsumableEnergyMod = 1.0
+ConsumableHealthMod = 0.2
+ConsumableStomachSpace = 50.0
+ConsumableSpawnChance = 1
+MaxConsumables = 2
+ConsumableModulate = Color(0.922244, 0.562966, 0.645012, 1)
 
 [node name="Stem01" type="Sprite2D" parent="."]
 material = ExtResource("2_03s1s")
@@ -20,18 +27,21 @@ scale = Vector2(0.159866, 0.171417)
 texture = ExtResource("3_75eqk")
 
 [node name="Leaf01" type="Sprite2D" parent="."]
+material = ExtResource("2_03s1s")
 position = Vector2(10, -30)
 rotation = 1.1072
 scale = Vector2(0.195138, 0.107521)
 texture = ExtResource("4_3xo8q")
 
 [node name="Leaf02" type="Sprite2D" parent="."]
+material = ExtResource("2_03s1s")
 position = Vector2(-18, -33)
 rotation = -0.911152
 scale = Vector2(0.110104, 0.0708393)
 texture = ExtResource("4_3xo8q")
 
 [node name="Blossom02" type="Sprite2D" parent="."]
+material = ExtResource("2_03s1s")
 position = Vector2(-3, -110)
 scale = Vector2(0.180628, 0.205882)
 texture = ExtResource("6_yan7l")

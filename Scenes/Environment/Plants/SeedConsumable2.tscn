@@ -7,7 +7,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_vgf07"]
 radius = 22.0227
 
-[node name="TestConsumable" type="RigidBody2D"]
+[node name="SeedConsumable2" type="RigidBody2D"]
 collision_layer = 7
 mass = 0.003
 gravity_scale = 1000.0
@@ -22,7 +22,6 @@ scale = Vector2(0.2, 0.194)
 texture = ExtResource("2_arcjp")
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-scale = Vector2(0.75, 0.75)
+scale = Vector2(0.5, 0.5)
 energy = 0.33
 texture = ExtResource("3_suxyb")
-texture_scale = 0.25

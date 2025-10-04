@@ -27,18 +27,20 @@ public class PlantEffect
 	public double Duration;    // seconds to digest
 	public double EnergyMod; // per second
 	public double HealthMod; // per second
+	public double StomachSpace;
 
 	public PlantEffect()
 	{
 	}
 
 
-	public PlantEffect(string name = "Default Plant Effect", double duration = 1.0, double eMod = 0, double hMod = 0)
+	public PlantEffect(string name = "Default Plant Effect", double duration = 1.0, double eMod = 0, double hMod = 0, double stomachSpace = 1.0)
 	{
 		Name = name;
 		Duration = duration;
 		EnergyMod = eMod;
 		HealthMod = hMod;
+		StomachSpace = stomachSpace;
 	}
 };
 

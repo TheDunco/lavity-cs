@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://dyakwmxk4lpqf"]
+[gd_scene load_steps=9 format=3 uid="uid://dyakwmxk4lpqf"]
 
 [ext_resource type="Script" uid="uid://dmfa5w1ickuvb" path="res://Scenes/Environment/Plants/Plant.cs" id="1_4ovqi"]
 [ext_resource type="PackedScene" uid="uid://c0h36vev8u0yd" path="res://Scenes/Environment/Plants/SeedConsumable2.tscn" id="2_h1d3c"]
+[ext_resource type="Material" uid="uid://f5vi3ttd0xuv" path="res://Materials/GlowShaderMaterial.tres" id="3_4ovqi"]
 [ext_resource type="Texture2D" uid="uid://cagn2fw5v0f3r" path="res://Assets/Environment/Plants/stem_03.png" id="3_ut86j"]
 [ext_resource type="Texture2D" uid="uid://nf2ywtc1pcp3" path="res://Assets/Environment/Plants/blossom_03.png" id="6_urbfw"]
 [ext_resource type="Texture2D" uid="uid://boi0trabaks3s" path="res://Assets/Environment/Plants/blossom_02.png" id="6_yan7l"]
@@ -11,20 +12,20 @@
 [node name="NormalPlant1" type="Node2D"]
 script = ExtResource("1_4ovqi")
 Consumable = ExtResource("2_h1d3c")
-ConsumableName = "NormalPlant1 Consumable"
-ConsumableDuration = 3
-ConsumableEnergyMod = 4
-ConsumableSpawnChance = 1
-MaxConsumables = 2
-ConsumableModulate = Color(0.627291, 0.409559, 0.094749, 0)
+ConsumableName = "Balanced"
+ConsumableDuration = 8
+MaxConsumables = 4
+ConsumableModulate = Color(0.475924, 0.741277, 0.4012, 1)
 
 [node name="Stem04" type="Sprite2D" parent="."]
+material = ExtResource("3_4ovqi")
 position = Vector2(-39, -66)
 rotation = -0.49672
 scale = Vector2(0.474757, 0.401984)
 texture = ExtResource("3_ut86j")
 
 [node name="Stem05" type="Sprite2D" parent="."]
+material = ExtResource("3_4ovqi")
 position = Vector2(42, -66)
 rotation = 0.587842
 scale = Vector2(0.474757, 0.401984)
@@ -32,6 +33,7 @@ texture = ExtResource("3_ut86j")
 
 [node name="Blossom02" type="Sprite2D" parent="."]
 modulate = Color(0.879613, 0.930086, 7.70092e-07, 1)
+material = ExtResource("3_4ovqi")
 position = Vector2(-66.375, -114.625)
 scale = Vector2(0.257853, 0.260695)
 texture = ExtResource("6_yan7l")
@@ -43,6 +45,7 @@ scale = Vector2(0.8, 0.8)
 
 [node name="Blossom03" type="Sprite2D" parent="."]
 modulate = Color(0.879613, 0.930086, 7.70092e-07, 1)
+material = ExtResource("3_4ovqi")
 position = Vector2(68.625, -107.625)
 scale = Vector2(0.257853, 0.260695)
 texture = ExtResource("6_yan7l")
@@ -53,6 +56,7 @@ rotation = 3.14159
 scale = Vector2(0.8, 0.8)
 
 [node name="Blossom04" type="Sprite2D" parent="."]
+material = ExtResource("3_4ovqi")
 position = Vector2(-3, -94)
 scale = Vector2(0.38, 0.357204)
 texture = ExtResource("6_urbfw")
@@ -61,6 +65,7 @@ texture = ExtResource("6_urbfw")
 position = Vector2(0, -152)
 
 [node name="Bud06" type="Sprite2D" parent="."]
+material = ExtResource("3_4ovqi")
 position = Vector2(-12, -33)
 rotation = -0.11652
 scale = Vector2(0.169782, 0.173611)

@@ -12,8 +12,9 @@ public partial class Plant : Node2D
 	[Export] private PackedScene Consumable;
 	[Export] private string ConsumableName = "Base Consumable";
 	[Export] private int ConsumableDuration = 10;
-	[Export] private int ConsumableEnergyMod = 3;
-	[Export] private int ConsumableHealthMod = 1;
+	[Export] private double ConsumableEnergyMod = 3;
+	[Export] private double ConsumableHealthMod = 1;
+	[Export] private double ConsumableStomachSpace = 30;
 	[Export] private int ConsumableSpawnChance = 2;
 	[Export] private int MaxConsumables = 3;
 	[Export(PropertyHint.ColorNoAlpha)] private Color ConsumableModulate = Colors.White;
@@ -28,7 +29,8 @@ public partial class Plant : Node2D
 			Name = ConsumableName,
 			Duration = ConsumableDuration,
 			EnergyMod = ConsumableEnergyMod,
-			HealthMod = ConsumableHealthMod
+			HealthMod = ConsumableHealthMod,
+			StomachSpace = ConsumableStomachSpace
 		};
 
 		rng = GetNode<RngManager>("/root/RngManager").Rng;

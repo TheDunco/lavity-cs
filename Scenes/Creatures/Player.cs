@@ -10,6 +10,7 @@ public partial class Player : CharacterBody2D
 	[Export] public double MaxHealth = 100;
 	[Export] public double MaxStomachSpace = 100;
 	private int MaxPlantsDigestedPerCycle = 2;
+	private AudioStreamPlayer OnConsumeSound = null;
 
 	public double Energy { get; private set; }
 	public double Health { get; private set; }
@@ -50,6 +51,7 @@ public partial class Player : CharacterBody2D
 		Camera = GetNode<Camera2D>("Camera");
 		targetZoom = Camera.Zoom;
 		PlayerLight = GetNode<LavityLight>("LavityLight");
+		OnConsumeSound = GetNode<AudioStreamPlayer>("OnConsumeSound");
 
 		Energy = MaxEnergy * 0.75;
 		Health = MaxHealth;
@@ -263,6 +265,7 @@ public partial class Player : CharacterBody2D
 			if (collision.GetCollider() is Consumable consumableCollision && !PlayerLight.IsEnabled())
 			{
 				EatPlant(consumableCollision.OnConsume());
+				OnConsumeSound?.Play();
 			}
 		}
 	}

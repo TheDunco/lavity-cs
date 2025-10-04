@@ -20,7 +20,11 @@ script = ExtResource("1_50glp")
 PlantPrefabs = Array[PackedScene]([ExtResource("5_v1gob"), ExtResource("3_vy5pj")])
 noise = SubResource("FastNoiseLite_50glp")
 
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.0807833, 0.0807833, 0.0807833, 1)
+
 [node name="DirectionalDarkness" type="DirectionalLight2D" parent="."]
+visible = false
 energy = 0.94
 blend_mode = 1
 

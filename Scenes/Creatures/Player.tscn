@@ -1,10 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://bo3wlbfb6kci3"]
+[gd_scene load_steps=15 format=3 uid="uid://bo3wlbfb6kci3"]
 
 [ext_resource type="Script" uid="uid://1smbulwqiw1p" path="res://Scenes/Creatures/Player.cs" id="1_ohbs4"]
 [ext_resource type="Texture2D" uid="uid://bm24oyvrkln0t" path="res://Assets/moth-flying/moth-flying-1.png" id="2_f00fu"]
 [ext_resource type="Texture2D" uid="uid://bbt06tj8eruwq" path="res://Assets/moth-flying/moth-flying-2.png" id="3_5i71y"]
 [ext_resource type="Texture2D" uid="uid://pls1jxyg8b26" path="res://Assets/moth-flying/moth-flying-3.png" id="4_7mcf4"]
 [ext_resource type="AudioStream" uid="uid://dnq2f0rufhudw" path="res://Assets/Audio/sfx/Real_PaperCrunch.wav" id="4_351oh"]
+[ext_resource type="Material" uid="uid://ql5ijw8ystro" path="res://Materials/AdditiveCanvasItemMaterial.tres" id="5_uy4mh"]
 [ext_resource type="AudioStream" uid="uid://6dy71wmtaiy3" path="res://Assets/Audio/sfx/wing_flap1.wav" id="6_s2fct"]
 [ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="7_fgvx3"]
 [ext_resource type="AudioStream" uid="uid://dveefh3mndixk" path="res://Assets/Audio/sfx/wing_flap2.wav" id="7_fwtcf"]
@@ -76,11 +77,12 @@ bus = &"Reverb Bus"
 
 [node name="OnConsumeSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_351oh")
-volume_db = -8.0
+volume_db = -27.964
 pitch_scale = 0.68
 bus = &"Reverb Bus"
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
+material = ExtResource("5_uy4mh")
 position = Vector2(-4, -8)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_f00fu")

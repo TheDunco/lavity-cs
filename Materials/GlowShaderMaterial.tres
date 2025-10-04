@@ -4,5 +4,5 @@
 
 [resource]
 shader = ExtResource("1_ycucx")
-shader_parameter/pulse_speed = 1.0
-shader_parameter/pulse_strength = 0.25
+shader_parameter/pulse_speed = 1.5
+shader_parameter/pulse_strength = 0.33

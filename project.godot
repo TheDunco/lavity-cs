@@ -77,3 +77,8 @@ ToggleLight={
 [physics]
 
 2d/default_gravity=0.0
+
+[rendering]
+
+limits/opengl/max_renderable_lights=128
+limits/opengl/max_lights_per_object=64

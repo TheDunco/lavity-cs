@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://c0h36vev8u0yd"]
+
+[ext_resource type="Script" uid="uid://dqc3kgiyjk6d3" path="res://Scenes/Environment/Consumable.cs" id="1_8t51e"]
+[ext_resource type="Texture2D" uid="uid://icqejqji6h5q" path="res://Assets/Environment/Plants/seed_02.png" id="2_arcjp"]
+[ext_resource type="Texture2D" uid="uid://b1d1vc17ifymn" path="res://Resources/PointLightTexture.tres" id="3_suxyb"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vgf07"]
+radius = 22.0227
+
+[node name="TestConsumable" type="RigidBody2D"]
+collision_layer = 7
+mass = 0.003
+gravity_scale = 1000.0
+script = ExtResource("1_8t51e")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vgf07")
+debug_color = Color(0, 0.6, 0.701961, 0.141176)
+
+[node name="Seed02" type="Sprite2D" parent="."]
+scale = Vector2(0.2, 0.194)
+texture = ExtResource("2_arcjp")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+scale = Vector2(0.75, 0.75)
+energy = 0.33
+texture = ExtResource("3_suxyb")
+texture_scale = 0.25

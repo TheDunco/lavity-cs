@@ -1,14 +1,35 @@
 using Godot;
+using System.Collections.Generic;
 
 public partial class Plant : Node2D
 {
 
-	internal int ConsumableSpawnChance = 1;
-	internal int MaxConsumables = 3;
+	internal List<Consumable> Consumables = [];
+	internal LavityLight LavityLight = null;
 	internal RandomNumberGenerator rng = null;
+
+	[ExportCategory("Consumable")]
+	[Export] private PackedScene Consumable;
+	[Export] private string ConsumableName = "Base Consumable";
+	[Export] private int ConsumableDuration = 10;
+	[Export] private int ConsumableEnergyMod = 3;
+	[Export] private int ConsumableHealthMod = 1;
+	[Export] private int ConsumableSpawnChance = 2;
+	[Export] private int MaxConsumables = 3;
+	[Export(PropertyHint.ColorNoAlpha)] private Color ConsumableModulate = Colors.White;
+	private PlantEffect ConsumableEffect = null;
+
 	public override void _Ready()
 	{
 		base._Ready();
+		LavityLight = GetNode<LavityLight>("LavityLight");
+		ConsumableEffect = new()
+		{
+			Name = ConsumableName,
+			Duration = ConsumableDuration,
+			EnergyMod = ConsumableEnergyMod,
+			HealthMod = ConsumableHealthMod
+		};
 
 		rng = GetNode<RngManager>("/root/RngManager").Rng;
 
@@ -17,7 +38,27 @@ public partial class Plant : Node2D
 
 	}
 
-	public virtual void OnSpawnTick()
+	public void OnSpawnTick()
 	{
+		if (Consumables.Count > MaxConsumables)
+		{
+			return;
+		}
+
+		if (!IsInstanceValid(LavityLight))
+		{
+			LavityLight = null;
+			return;
+		}
+
+		if (rng.RandiRange(0, 100) < ConsumableSpawnChance)
+		{
+			Consumable NewConsumable = (Consumable)Consumable.Instantiate();
+			NewConsumable.SetEffect(ConsumableEffect);
+			NewConsumable.Position = LavityLight.Position + new Vector2(rng.RandiRange(-2, 2), rng.RandiRange(-2, 2));
+			NewConsumable.Modulate = ConsumableModulate;
+			Consumables.Add(NewConsumable);
+			AddChild(NewConsumable);
+		}
 	}
 }

@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://cnbcmqfqfiiy4"]
+
+[ext_resource type="Script" uid="uid://dqc3kgiyjk6d3" path="res://Scenes/Environment/Consumable.cs" id="1_tf443"]
+[ext_resource type="Texture2D" uid="uid://cl4s78xsuctpa" path="res://Assets/Environment/Plants/seed_04.png" id="2_djlev"]
+[ext_resource type="Texture2D" uid="uid://b1d1vc17ifymn" path="res://Resources/PointLightTexture.tres" id="3_0dprk"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3gacw"]
+radius = 11.932
+height = 36.4453
+
+[node name="TestConsumable" type="RigidBody2D"]
+collision_layer = 7
+mass = 0.003
+gravity_scale = 1000.0
+script = ExtResource("1_tf443")
+
+[node name="Seed04" type="Sprite2D" parent="."]
+position = Vector2(9.53674e-07, -2.38419e-07)
+scale = Vector2(0.340426, 0.338462)
+texture = ExtResource("2_djlev")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+scale = Vector2(0.75, 0.75)
+energy = 0.33
+texture = ExtResource("3_0dprk")
+texture_scale = 0.25
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+rotation = 0.218166
+shape = SubResource("CapsuleShape2D_3gacw")
+debug_color = Color(0, 0.6, 0.701961, 0.141176)

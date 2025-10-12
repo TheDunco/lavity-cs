@@ -12,8 +12,9 @@
 [node name="NormalPlant1" type="Node2D"]
 script = ExtResource("1_4ovqi")
 Consumable = ExtResource("2_h1d3c")
-ConsumableName = "Balanced"
-ConsumableDuration = 8
+ConsumableName = "Big (40)"
+ConsumableEnergyMod = 4.0
+ConsumableStomachSpace = 40.0
 MaxConsumables = 4
 ConsumableModulate = Color(0.475924, 0.741277, 0.4012, 1)
 

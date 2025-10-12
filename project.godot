@@ -13,6 +13,8 @@ config_version=5
 config/name="Lavity CS"
 run/main_scene="uid://brmf752ifplp0"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/image="uid://diibr5xnbw8wg"
 config/icon="res://icon.svg"
 
 [autoload]

@@ -48,6 +48,11 @@ public partial class LavityLight : Node2D
 		else TurnOn();
 	}
 
+	public void SetEnergy(double energy)
+	{
+		Light.Energy = (float)Mathf.Remap(energy, 0, 100, 0.2, 1.5);
+	}
+
 	public override void _Ready()
 	{
 		base._Ready();

@@ -13,12 +13,11 @@
 [node name="NormalPlant1" type="Node2D"]
 script = ExtResource("1_erteu")
 Consumable = ExtResource("2_ddeqk")
-ConsumableName = "Quick Hitter (12)"
-ConsumableDuration = 2
+ConsumableName = "Quick Hitter (18)"
+ConsumableDuration = 3
 ConsumableEnergyMod = 6.0
 ConsumableHealthMod = 2.0
-ConsumableStomachSpace = 40.0
-ConsumableSpawnChance = 3
+ConsumableStomachSpace = 18.0
 MaxConsumables = 1
 ConsumableModulate = Color(1, 1, 0, 1)
 

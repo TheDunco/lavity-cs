@@ -1,9 +1,8 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
-public partial class Player : CharacterBody2D
+public partial class Player : Creature
 {
 	// Stats
 	[Export] public double MaxEnergy = 100;
@@ -24,8 +23,6 @@ public partial class Player : CharacterBody2D
 	private bool IsInputAdded = false;
 
 	// Movement
-	private readonly static int BaseAcceleration = 1000;
-	private int Acceleration = BaseAcceleration;
 	private float AirResistance = 0.0002f;
 	private float MaxVelocity = 1500;
 
@@ -41,11 +38,13 @@ public partial class Player : CharacterBody2D
 	private Vector2 targetZoom;
 	private Tween zoomTween;
 
+
 	// Light
 	private LavityLight PlayerLight = null;
 
 	public override void _Ready()
 	{
+		base._Ready();
 		Sprite = GetNode<AnimatedSprite2D>("Sprite");
 		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
 		Camera = GetNode<Camera2D>("Camera");
@@ -140,28 +139,13 @@ public partial class Player : CharacterBody2D
 		Energy = Mathf.Clamp(newEnergy, 0, MaxEnergy);
 		Health = Mathf.Clamp(newHealth, 0, MaxHealth);
 
+		PlayerLight.SetEnergy(newEnergy);
+
 		if (Health == 0)
 		{
 			GetTree().Quit();
 		}
 		Acceleration = (int)Mathf.Remap(Energy, 0f, 100f, 0.5 * BaseAcceleration, 1.25 * BaseAcceleration);
-	}
-
-	private void OrientByRotation()
-	{
-
-		var CurScaleY = Scale.Y;
-		double rotationCos = Math.Cos(Rotation);
-		if (rotationCos < 0 && CurScaleY > 0)
-		{
-
-			Scale = new Vector2(Scale.X, -Scale.Y);
-		}
-		else if (rotationCos > 0 && CurScaleY < 0)
-		{
-
-			Scale = new Vector2(Scale.X, Math.Abs(Scale.Y));
-		}
 	}
 
 	public override void _Process(double delta)
@@ -262,10 +246,23 @@ public partial class Player : CharacterBody2D
 		if (didCollide)
 		{
 			var collision = this.GetLastSlideCollision();
-			if (collision.GetCollider() is Consumable consumableCollision && !PlayerLight.IsEnabled())
+			var collider = collision.GetCollider();
+			if (collider is Consumable consumableCollision && !PlayerLight.IsEnabled())
 			{
 				EatPlant(consumableCollision.OnConsume());
 				OnConsumeSound?.Play();
+			}
+
+			if (collider is Lanternfly)
+			{
+				if (PlayerLight.IsEnabled())
+				{
+					Energy -= 1;
+				}
+				else
+				{
+					Health -= 1;
+				}
 			}
 		}
 	}
@@ -279,6 +276,4 @@ public partial class Player : CharacterBody2D
 			PlayerLight.Toggle();
 		}
 	}
-
-
 }

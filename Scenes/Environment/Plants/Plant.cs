@@ -15,7 +15,7 @@ public partial class Plant : Node2D
 	[Export] private double ConsumableEnergyMod = 3;
 	[Export] private double ConsumableHealthMod = 1;
 	[Export] private double ConsumableStomachSpace = 30;
-	[Export] private int ConsumableSpawnChance = 2;
+	[Export] private double ConsumableSpawnChance = 2.0;
 	[Export] private int MaxConsumables = 3;
 	[Export(PropertyHint.ColorNoAlpha)] private Color ConsumableModulate = Colors.White;
 	private PlantEffect ConsumableEffect = null;
@@ -53,7 +53,7 @@ public partial class Plant : Node2D
 			return;
 		}
 
-		if (rng.RandiRange(0, 100) < ConsumableSpawnChance)
+		if (rng.RandfRange(0, 100) < ConsumableSpawnChance)
 		{
 			Consumable NewConsumable = (Consumable)Consumable.Instantiate();
 			NewConsumable.SetEffect(ConsumableEffect);

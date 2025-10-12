@@ -91,7 +91,15 @@ public class Island
 
 					var prefab = plantPrefabs[rng.RandiRange(0, plantPrefabs.Length - 1)];
 					var plant = prefab.Instantiate<Node2D>();
-					plant.Position = pos;
+					if (plant is Lanternfly lanternfly)
+					{
+						lanternfly.Position = pos + normal * 50;
+					}
+					else
+					{
+
+						plant.Position = pos;
+					}
 					plant.Rotation = normal.Angle() + Mathf.Pi / 2f;
 					renderInstance.AddChild(plant);
 				}

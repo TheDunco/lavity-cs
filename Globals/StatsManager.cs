@@ -1,6 +1,5 @@
-using Godot;
 using System;
-
+using Godot;
 
 public partial class StatsManager : Node
 {
@@ -28,19 +27,28 @@ public class PlantEffect
 	public double EnergyMod; // per second
 	public double HealthMod; // per second
 	public double StomachSpace;
+	public Sprite2D StomachTextureSprite;
 
 	public PlantEffect()
 	{
 	}
 
 
-	public PlantEffect(string name = "Default Plant Effect", double duration = 1.0, double eMod = 0, double hMod = 0, double stomachSpace = 1.0)
+	public PlantEffect(string name = "Default Plant Effect", double duration = 1.0, double eMod = 0, double hMod = 0, double stomachSpace = 1.0, Sprite2D stomachTextureSprite = null)
 	{
 		Name = name;
 		Duration = duration;
 		EnergyMod = eMod;
 		HealthMod = hMod;
 		StomachSpace = stomachSpace;
+		if (stomachTextureSprite != null)
+		{
+			StomachTextureSprite = stomachTextureSprite;
+		}
+		else
+		{
+			throw new NullReferenceException("Plant Effect Texture Sprite not provided");
+		}
 	}
 };
 

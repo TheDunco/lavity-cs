@@ -30,7 +30,7 @@ public partial class Plant : Node2D
 			Duration = ConsumableDuration,
 			EnergyMod = ConsumableEnergyMod,
 			HealthMod = ConsumableHealthMod,
-			StomachSpace = ConsumableStomachSpace
+			StomachSpace = ConsumableStomachSpace,
 		};
 
 		rng = GetNode<RngManager>("/root/RngManager").Rng;
@@ -56,6 +56,7 @@ public partial class Plant : Node2D
 		if (rng.RandfRange(0, 100) < ConsumableSpawnChance)
 		{
 			Consumable NewConsumable = (Consumable)Consumable.Instantiate();
+			ConsumableEffect.StomachTextureSprite = NewConsumable.GetStomachTextureSprite();
 			NewConsumable.SetEffect(ConsumableEffect);
 			NewConsumable.Position = LavityLight.Position + new Vector2(rng.RandiRange(-2, 2), rng.RandiRange(-2, 2));
 			NewConsumable.Modulate = ConsumableModulate;

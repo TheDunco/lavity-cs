@@ -15,7 +15,7 @@ mass = 0.003
 gravity_scale = 1000.0
 script = ExtResource("1_tf443")
 
-[node name="Seed04" type="Sprite2D" parent="."]
+[node name="StomachTextureSprite" type="Sprite2D" parent="."]
 material = ExtResource("2_tf443")
 position = Vector2(9.53674e-07, -2.38419e-07)
 scale = Vector2(0.340426, 0.338462)

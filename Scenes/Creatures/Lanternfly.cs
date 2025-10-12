@@ -10,6 +10,7 @@ public partial class Lanternfly : Creature
 	public override void _Ready()
 	{
 		BaseAcceleration = 4;
+		Damage = 8;
 		base._Ready();
 		PerceptionArea = GetNode<Area2D>("PerceptionArea");
 		Sprite = GetNode<AnimatedSprite2D>("Sprite");

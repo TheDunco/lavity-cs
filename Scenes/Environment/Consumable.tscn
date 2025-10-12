@@ -10,10 +10,10 @@ radius = 24.0208
 collision_layer = 3
 script = ExtResource("1_vgf07")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_vgf07")
-
 [node name="Blossom01" type="Sprite2D" parent="."]
 position = Vector2(0.750001, -0.625)
 scale = Vector2(0.221429, 0.218254)
 texture = ExtResource("2_12hkl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vgf07")

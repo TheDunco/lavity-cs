@@ -5,7 +5,7 @@ public abstract partial class Creature : CharacterBody2D
 {
 	[Export] internal int BaseAcceleration = 3;
 	internal int Acceleration;
-
+	public int Damage = 2;
 	public override void _Ready()
 	{
 		base._Ready();

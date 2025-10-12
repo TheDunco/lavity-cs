@@ -14,14 +14,14 @@ mass = 0.003
 gravity_scale = 1000.0
 script = ExtResource("1_8t51e")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_vgf07")
-debug_color = Color(0, 0.6, 0.701961, 0.141176)
-
-[node name="Seed02" type="Sprite2D" parent="."]
+[node name="StomachTextureSprite" type="Sprite2D" parent="."]
 material = ExtResource("2_vgi8v")
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("2_arcjp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vgf07")
+debug_color = Color(0, 0.6, 0.701961, 0.141176)
 
 [node name="SpriteLight" type="Sprite2D" parent="."]
 material = ExtResource("2_vgi8v")

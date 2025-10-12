@@ -14,6 +14,7 @@ public partial class Player : Creature
 	public double Energy { get; private set; }
 	public double Health { get; private set; }
 	public double Fullness { get; private set; }
+	private StatsDisplay statsDisplay = null;
 
 	private List<PlantEffect> Stomach = [];
 
@@ -38,6 +39,7 @@ public partial class Player : Creature
 	private Vector2 targetZoom;
 	private Tween zoomTween;
 
+	private bool DisableCollisionDamage = false;
 
 	// Light
 	private LavityLight PlayerLight = null;
@@ -51,6 +53,7 @@ public partial class Player : Creature
 		targetZoom = Camera.Zoom;
 		PlayerLight = GetNode<LavityLight>("LavityLight");
 		OnConsumeSound = GetNode<AudioStreamPlayer>("OnConsumeSound");
+		statsDisplay = GetNode<StatsDisplay>("../StatsDisplay");
 
 		Energy = MaxEnergy * 0.75;
 		Health = MaxHealth;
@@ -74,6 +77,7 @@ public partial class Player : Creature
 		{
 
 			Stomach.Add(effect);
+			statsDisplay.AddSpriteToStomachContents(effect.StomachTextureSprite);
 		}
 		else
 		{
@@ -83,6 +87,7 @@ public partial class Player : Creature
 
 	private void OnStatsTick()
 	{
+		DisableCollisionDamage = false;
 		Fullness = GetCurrentFullness();
 		// Start from current values
 		double newEnergy = Energy;
@@ -117,7 +122,10 @@ public partial class Player : Creature
 			effect.StomachSpace -= effect.StomachSpace / effect.Duration;
 			plantsDigestedThisTick += 1;
 			if (effect.Duration <= 0 || effect.StomachSpace <= 0)
+			{
+				statsDisplay.RemoveStomachContents(i);
 				Stomach.RemoveAt(i);
+			}
 
 			if (plantsDigestedThisTick >= MaxPlantsDigestedPerCycle)
 			{
@@ -253,16 +261,17 @@ public partial class Player : Creature
 				OnConsumeSound?.Play();
 			}
 
-			if (collider is Lanternfly)
+			if (!DisableCollisionDamage && collider is Lanternfly lanternfly)
 			{
 				if (PlayerLight.IsEnabled())
 				{
-					Energy -= 1;
+					Energy -= lanternfly.Damage;
 				}
 				else
 				{
-					Health -= 1;
+					Health -= lanternfly.Damage;
 				}
+				DisableCollisionDamage = true;
 			}
 		}
 	}

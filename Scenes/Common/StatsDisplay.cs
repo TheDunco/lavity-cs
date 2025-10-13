@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata.Ecma335;
 
 public partial class StatsDisplay : CanvasLayer
@@ -41,7 +42,15 @@ public partial class StatsDisplay : CanvasLayer
 	public void RemoveStomachContents(int indexToRemove)
 	{
 		var spriteContainers = StomachContentsContainer.GetChildren();
-		spriteContainers[indexToRemove].QueueFree();
+		try
+		{
+
+			if (!spriteContainers[indexToRemove].IsQueuedForDeletion())
+			{
+				spriteContainers[indexToRemove].QueueFree();
+			}
+		}
+		catch (Exception _) { GD.PushError("Didn't find child in stats display to remove"); }
 	}
 
 	public override void _Process(double delta)

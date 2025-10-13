@@ -41,6 +41,9 @@ public partial class Player : Creature
 
 	private bool DisableCollisionDamage = false;
 
+	private Area2D RepulseArea = null;
+	private AnimationPlayer RepulseAnimation = null;
+
 	// Light
 	private LavityLight PlayerLight = null;
 
@@ -54,6 +57,8 @@ public partial class Player : Creature
 		PlayerLight = GetNode<LavityLight>("LavityLight");
 		OnConsumeSound = GetNode<AudioStreamPlayer>("OnConsumeSound");
 		statsDisplay = GetNode<StatsDisplay>("../StatsDisplay");
+		RepulseArea = GetNode<Area2D>("RepulseArea");
+		RepulseAnimation = GetNode<AnimationPlayer>("RepulseAnimation");
 
 		Energy = MaxEnergy * 0.75;
 		Health = MaxHealth;
@@ -284,5 +289,70 @@ public partial class Player : Creature
 		{
 			PlayerLight.Toggle();
 		}
+
+		if (@event.IsActionPressed("Repulse") && RepulseAnimation.CurrentAnimation != "Repulse")
+		{
+			Energy -= 10;
+			RepulseAnimation.CurrentAnimation = "Repulse";
+
+			// Base parameters
+			float repulseStrength = 98 * 4f; // base impulse magnitude (tweak to taste)
+			float charVelocityMultiplier = 10f; // multiplier for CharacterBody2D; tune for feel
+
+			// Determine max radius from the area collision shape (assumes a CircleShape2D or a rectangular shape)
+			float maxRadius = 0f;
+			var cs = RepulseArea.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+			if (cs != null && cs.Shape != null)
+			{
+				// If it's a CircleShape2D use radius, otherwise approximate from bounding rect
+				if (cs.Shape is CircleShape2D cshape)
+					maxRadius = cshape.Radius;
+				else
+					maxRadius = cs.Shape.GetRect().Size.Length() * 0.5f;
+			}
+			else
+			{
+				// fallback
+				maxRadius = 200f;
+			}
+
+			Vector2 origin = GlobalPosition;
+
+			foreach (PhysicsBody2D node in RepulseArea.GetOverlappingBodies())
+			{
+				if (node == this) // don't push self
+					continue;
+
+				// compute vector from origin to body
+				Vector2 toBody = node.GlobalPosition - origin;
+				float distance = toBody.Length();
+				if (distance <= 0.001f)
+					continue; // ignore bodies exactly on origin
+
+				Vector2 direction = toBody / distance;
+
+				// quadratic falloff (strong at center, smooth fade to edges)
+				float t = Mathf.Clamp(distance / maxRadius, 0f, 1f);
+				float falloff = Mathf.Pow(1f - t, 2f);
+
+				// final impulse magnitude (tweak repulseStrength or falloff as needed)
+				float impulseMagnitude = repulseStrength * falloff;
+
+				if (node is RigidBody2D rigidBody)
+				{
+					// Impulse acts immediately; mass is accounted for by the physics engine
+					// Multiply if you want a stronger instantaneous effect:
+					rigidBody.ApplyCentralImpulse(direction * impulseMagnitude);
+				}
+				else if (node is CharacterBody2D charBody)
+				{
+					// CharacterBody2D doesn't accept impulses — modify its velocity instead.
+					// Additive so existing player/enemy motion is preserved.
+					charBody.Velocity += direction * impulseMagnitude * charVelocityMultiplier;
+				}
+			}
+		}
+
+
 	}
 }

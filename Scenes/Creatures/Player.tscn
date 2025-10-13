@@ -1,9 +1,12 @@
-[gd_scene load_steps=15 format=3 uid="uid://bo3wlbfb6kci3"]
+[gd_scene load_steps=23 format=3 uid="uid://bo3wlbfb6kci3"]
 
 [ext_resource type="Script" uid="uid://1smbulwqiw1p" path="res://Scenes/Creatures/Player.cs" id="1_ohbs4"]
 [ext_resource type="Texture2D" uid="uid://bm24oyvrkln0t" path="res://Assets/moth-flying/moth-flying-1.png" id="2_f00fu"]
+[ext_resource type="Shader" uid="uid://cvh2iumq0ee4r" path="res://Shaders/Tutorial2.gdshader" id="2_fwtcf"]
 [ext_resource type="Texture2D" uid="uid://bbt06tj8eruwq" path="res://Assets/moth-flying/moth-flying-2.png" id="3_5i71y"]
+[ext_resource type="Texture2D" uid="uid://ca2ckm5hou0hs" path="res://Assets/Fx/Repulse.png" id="3_38ttt"]
 [ext_resource type="Texture2D" uid="uid://pls1jxyg8b26" path="res://Assets/moth-flying/moth-flying-3.png" id="4_7mcf4"]
+[ext_resource type="AudioStream" uid="uid://bqvfhf7rx7fux" path="res://Assets/Audio/sfx/repulse.wav" id="4_38ttt"]
 [ext_resource type="AudioStream" uid="uid://dnq2f0rufhudw" path="res://Assets/Audio/sfx/Real_PaperCrunch.wav" id="4_351oh"]
 [ext_resource type="Material" uid="uid://ql5ijw8ystro" path="res://Materials/AdditiveCanvasItemMaterial.tres" id="5_uy4mh"]
 [ext_resource type="AudioStream" uid="uid://6dy71wmtaiy3" path="res://Assets/Audio/sfx/wing_flap1.wav" id="6_s2fct"]
@@ -21,6 +24,97 @@ height = 2048
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f00fu"]
 radius = 30.0
 height = 86.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l3som"]
+shader = ExtResource("2_fwtcf")
+shader_parameter/distortionTexture = ExtResource("3_38ttt")
+
+[sub_resource type="Animation" id="Animation_fwtcf"]
+resource_name = "new_animation"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1.41421, 1.00001),
+"update": 0,
+"values": [Vector2(0.1, 0.1), Vector2(8, 8)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 0
+tracks/1/loop_wrap = false
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("RepulseSound:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_38ttt"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0.05, 0.05)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("RepulseSound:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_l3som"]
+_data = {
+&"RESET": SubResource("Animation_38ttt"),
+&"Repulse": SubResource("Animation_fwtcf")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_uy4mh"]
+radius = 1521.43
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_351oh"]
 playback_mode = 1
@@ -71,6 +165,39 @@ position = Vector2(0, -1)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_f00fu")
 
+[node name="Repulse" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(1, 1, 1, 0.713945)
+z_index = 100
+material = SubResource("ShaderMaterial_l3som")
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("3_38ttt")
+
+[node name="PointLight2D" type="PointLight2D" parent="Repulse"]
+z_index = 100
+color = Color(0.654902, 0.486275, 0.0470588, 0.419608)
+energy = 16.0
+shadow_enabled = true
+texture = ExtResource("3_38ttt")
+
+[node name="RepulseSound" type="AudioStreamPlayer" parent="Repulse"]
+stream = ExtResource("4_38ttt")
+volume_db = -31.722
+bus = &"Reverb Bus"
+
+[node name="RepulseAnimation" type="AnimationPlayer" parent="."]
+reset_on_save = false
+root_node = NodePath("../Repulse")
+libraries = {
+&"": SubResource("AnimationLibrary_l3som")
+}
+
+[node name="RepulseArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RepulseArea"]
+shape = SubResource("CircleShape2D_uy4mh")
+debug_color = Color(0.655233, 0.487003, 0.045984, 0.419608)
+
 [node name="WingFlapSounds" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamRandomizer_351oh")
 volume_db = -15.338
@@ -87,6 +214,7 @@ material = ExtResource("5_uy4mh")
 position = Vector2(-4, -8)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_f00fu")
+frame_progress = 0.894502
 speed_scale = 3.0
 
 [node name="LavityLight" parent="." instance=ExtResource("7_fgvx3")]

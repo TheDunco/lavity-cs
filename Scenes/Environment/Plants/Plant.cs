@@ -57,7 +57,7 @@ public partial class Plant : Node2D
 		{
 			Consumable NewConsumable = (Consumable)Consumable.Instantiate();
 			ConsumableEffect.StomachTextureSprite = NewConsumable.GetStomachTextureSprite();
-			NewConsumable.SetEffect(ConsumableEffect);
+			NewConsumable.Effect = ConsumableEffect;
 			NewConsumable.Position = LavityLight.Position + new Vector2(rng.RandiRange(-2, 2), rng.RandiRange(-2, 2));
 			NewConsumable.Modulate = ConsumableModulate;
 			Consumables.Add(NewConsumable);

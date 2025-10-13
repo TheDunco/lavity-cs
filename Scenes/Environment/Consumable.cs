@@ -2,7 +2,7 @@ using Godot;
 
 public partial class Consumable : RigidBody2D
 {
-	private PlantEffect Effect;
+	public PlantEffect Effect { get; set; }
 	public override void _Ready()
 	{
 		base._Ready();
@@ -23,15 +23,12 @@ public partial class Consumable : RigidBody2D
 	{
 	}
 
-	public void SetEffect(PlantEffect effect)
+	//TODO: Move the sound effect here
+	public virtual Consumable OnConsume()
 	{
-		Effect = effect;
-	}
-
-	public virtual PlantEffect OnConsume()
-	{
-		this.QueueFree();
-		return Effect;
+		this.Visible = false;
+		this.ProcessMode = ProcessModeEnum.Disabled;
+		return this;
 	}
 }
 

@@ -25,9 +25,25 @@ public partial class StatsDisplay : CanvasLayer
 		StomachProgress.MaxValue = Player.MaxStomachSpace;
 
 		StomachContentsContainer = GetNode<HBoxContainer>("VBoxContainer/HBoxContainer/StomachContentsContainer");
+
+
+		var statsManager = GetNode<StatsManager>("/root/StatsManager");
+		statsManager.StatsTick += UpdateStomachContentsDisplay;
 	}
 
-	public void AddSpriteToStomachContents(Sprite2D stomachTextureSprite)
+	public void UpdateStomachContentsDisplay()
+	{
+		foreach (Node n in StomachContentsContainer.GetChildren())
+		{
+			StomachContentsContainer.RemoveChild(n);
+		}
+		foreach (Consumable c in Player.Stomach)
+		{
+			AddConsumableToStomachContents(c);
+		}
+	}
+
+	private void AddConsumableToStomachContents(Consumable consumable)
 	{
 		MarginContainer container = new()
 		{
@@ -35,7 +51,10 @@ public partial class StatsDisplay : CanvasLayer
 		};
 		container.AddThemeConstantOverride("margin_left", 20);
 		container.AddThemeConstantOverride("margin_right", 20);
-		container.AddChild(stomachTextureSprite.Duplicate());
+		Consumable newInstance = (Consumable)consumable.Duplicate();
+		newInstance.Position = Vector2.Zero;
+		newInstance.Visible = true;
+		container.AddChild(newInstance);
 
 		StomachContentsContainer.AddChild(container);
 	}
@@ -50,7 +69,7 @@ public partial class StatsDisplay : CanvasLayer
 				spriteContainers[indexToRemove].QueueFree();
 			}
 		}
-		catch (Exception _) { GD.PushError("Didn't find child in stats display to remove"); }
+		catch (Exception) { GD.PushError($"Didn't find child in stats display to remove at index {indexToRemove}"); }
 	}
 
 	public override void _Process(double delta)

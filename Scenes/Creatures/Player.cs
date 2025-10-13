@@ -16,7 +16,7 @@ public partial class Player : Creature
 	public double Fullness { get; private set; }
 	private StatsDisplay statsDisplay = null;
 
-	private List<PlantEffect> Stomach = [];
+	public List<Consumable> Stomach = [];
 
 	private Tween statTween;
 	private double pendingEnergy;
@@ -46,6 +46,7 @@ public partial class Player : Creature
 
 	// Light
 	private LavityLight PlayerLight = null;
+	private RandomNumberGenerator rng = null;
 
 	public override void _Ready()
 	{
@@ -59,6 +60,7 @@ public partial class Player : Creature
 		statsDisplay = GetNode<StatsDisplay>("../StatsDisplay");
 		RepulseArea = GetNode<Area2D>("RepulseArea");
 		RepulseAnimation = GetNode<AnimationPlayer>("RepulseAnimation");
+		rng = GetNode<RngManager>("/root/RngManager").Rng;
 
 		Energy = MaxEnergy * 0.75;
 		Health = MaxHealth;
@@ -69,20 +71,18 @@ public partial class Player : Creature
 	public double GetCurrentFullness()
 	{
 		double fullness = 0;
-		foreach (var effect in Stomach)
+		foreach (var consumable in Stomach)
 		{
-			fullness += effect.StomachSpace;
+			fullness += consumable.Effect.StomachSpace;
 		}
 		return fullness;
 	}
-	public void EatPlant(PlantEffect effect)
+	public void EatPlant(Consumable consumable)
 	{
 		double Fullness = GetCurrentFullness();
 		if (Fullness < MaxStomachSpace)
 		{
-
-			Stomach.Add(effect);
-			statsDisplay.AddSpriteToStomachContents(effect.StomachTextureSprite);
+			Stomach.Add(consumable);
 		}
 		else
 		{
@@ -119,7 +119,7 @@ public partial class Player : Creature
 		var plantsDigestedThisTick = 0;
 		for (int i = Stomach.Count - 1; i >= 0; i--)
 		{
-			var effect = Stomach[i];
+			var effect = Stomach[i].Effect;
 			newEnergy += effect.EnergyMod;
 			newHealth += effect.HealthMod;
 
@@ -128,7 +128,6 @@ public partial class Player : Creature
 			plantsDigestedThisTick += 1;
 			if (effect.Duration <= 0 || effect.StomachSpace <= 0)
 			{
-				statsDisplay.RemoveStomachContents(i);
 				Stomach.RemoveAt(i);
 			}
 
@@ -281,6 +280,70 @@ public partial class Player : Creature
 		}
 	}
 
+	private void Repulse()
+	{
+		Energy -= 10;
+		RepulseAnimation.CurrentAnimation = "Repulse";
+
+		// Base parameters
+		float repulseStrength = 98 * 4f; // base impulse magnitude (tweak to taste)
+		float charVelocityMultiplier = 10f; // multiplier for CharacterBody2D; tune for feel
+
+		// Determine max radius from the area collision shape (assumes a CircleShape2D or a rectangular shape)
+		float maxRadius = 0f;
+		var cs = RepulseArea.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+		if (cs != null && cs.Shape != null)
+		{
+			// If it's a CircleShape2D use radius, otherwise approximate from bounding rect
+			if (cs.Shape is CircleShape2D cshape)
+				maxRadius = cshape.Radius;
+			else
+				maxRadius = cs.Shape.GetRect().Size.Length() * 0.5f;
+		}
+		else
+		{
+			// fallback
+			maxRadius = 200f;
+		}
+
+		Vector2 origin = GlobalPosition;
+
+		foreach (PhysicsBody2D node in RepulseArea.GetOverlappingBodies())
+		{
+			if (node == this) // don't push self
+				continue;
+
+			// compute vector from origin to body
+			Vector2 toBody = node.GlobalPosition - origin;
+			float distance = toBody.Length();
+			if (distance <= 0.001f)
+				continue; // ignore bodies exactly on origin
+
+			Vector2 direction = toBody / distance;
+
+			// quadratic falloff (strong at center, smooth fade to edges)
+			float t = Mathf.Clamp(distance / maxRadius, 0f, 1f);
+			float falloff = Mathf.Pow(1f - t, 2f);
+
+			// final impulse magnitude (tweak repulseStrength or falloff as needed)
+			float impulseMagnitude = repulseStrength * falloff;
+
+			if (node is RigidBody2D rigidBody)
+			{
+				// Impulse acts immediately; mass is accounted for by the physics engine
+				// Multiply if you want a stronger instantaneous effect:
+				rigidBody.ApplyCentralImpulse(direction * impulseMagnitude);
+			}
+			else if (node is CharacterBody2D charBody)
+			{
+				// CharacterBody2D doesn't accept impulses — modify its velocity instead.
+				// Additive so existing player/enemy motion is preserved.
+				charBody.Velocity += direction * impulseMagnitude * charVelocityMultiplier;
+			}
+		}
+
+	}
+
 	public override void _UnhandledInput(InputEvent @event)
 	{
 		base._UnhandledInput(@event);
@@ -292,67 +355,61 @@ public partial class Player : Creature
 
 		if (@event.IsActionPressed("Repulse") && RepulseAnimation.CurrentAnimation != "Repulse")
 		{
-			Energy -= 10;
-			RepulseAnimation.CurrentAnimation = "Repulse";
-
-			// Base parameters
-			float repulseStrength = 98 * 4f; // base impulse magnitude (tweak to taste)
-			float charVelocityMultiplier = 10f; // multiplier for CharacterBody2D; tune for feel
-
-			// Determine max radius from the area collision shape (assumes a CircleShape2D or a rectangular shape)
-			float maxRadius = 0f;
-			var cs = RepulseArea.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
-			if (cs != null && cs.Shape != null)
-			{
-				// If it's a CircleShape2D use radius, otherwise approximate from bounding rect
-				if (cs.Shape is CircleShape2D cshape)
-					maxRadius = cshape.Radius;
-				else
-					maxRadius = cs.Shape.GetRect().Size.Length() * 0.5f;
-			}
-			else
-			{
-				// fallback
-				maxRadius = 200f;
-			}
-
-			Vector2 origin = GlobalPosition;
-
-			foreach (PhysicsBody2D node in RepulseArea.GetOverlappingBodies())
-			{
-				if (node == this) // don't push self
-					continue;
-
-				// compute vector from origin to body
-				Vector2 toBody = node.GlobalPosition - origin;
-				float distance = toBody.Length();
-				if (distance <= 0.001f)
-					continue; // ignore bodies exactly on origin
-
-				Vector2 direction = toBody / distance;
-
-				// quadratic falloff (strong at center, smooth fade to edges)
-				float t = Mathf.Clamp(distance / maxRadius, 0f, 1f);
-				float falloff = Mathf.Pow(1f - t, 2f);
-
-				// final impulse magnitude (tweak repulseStrength or falloff as needed)
-				float impulseMagnitude = repulseStrength * falloff;
-
-				if (node is RigidBody2D rigidBody)
-				{
-					// Impulse acts immediately; mass is accounted for by the physics engine
-					// Multiply if you want a stronger instantaneous effect:
-					rigidBody.ApplyCentralImpulse(direction * impulseMagnitude);
-				}
-				else if (node is CharacterBody2D charBody)
-				{
-					// CharacterBody2D doesn't accept impulses — modify its velocity instead.
-					// Additive so existing player/enemy motion is preserved.
-					charBody.Velocity += direction * impulseMagnitude * charVelocityMultiplier;
-				}
-			}
+			Repulse();
 		}
 
+		if (@event.IsActionPressed("FireProjectile"))
+		{
+			if (Stomach.Count == 0)
+				return; // nothing to fire!
+
+			int index = Stomach.Count - 1;
+			Consumable projectile = Stomach[index];
+			if (projectile.IsQueuedForDeletion())
+			{
+				return;
+			}
+			Stomach.RemoveAt(index);
+
+			// Convert Consumable to projectile
+			projectile.SetScript(GD.Load<Script>("res://Scenes/Common/Projectile.cs"));
+			projectile.ProcessMode = ProcessModeEnum.Always;
+
+			// Make sure the projectile is an active physics body
+			if (projectile is RigidBody2D body)
+			{
+				// Ensure it's visible and detached from player
+				body.Reparent(GetTree().CurrentScene);
+
+				body.GlobalPosition = GlobalPosition;
+
+				// Reset rotation & velocity before firing
+				body.Rotation = GlobalRotation;
+				body.LinearVelocity = Vector2.Zero;
+				body.AngularVelocity = 0;
+
+				// Compute base direction: player facing
+				Vector2 direction = new Vector2(Mathf.Cos(GlobalRotation), Mathf.Sin(GlobalRotation)).Normalized();
+
+				// Add a small random spread (optional)
+				float spreadAngle = rng.RandfRange(-0.15f, 0.15f); // ~±9 degrees
+				direction = direction.Rotated(spreadAngle);
+
+				// Fire speed / impulse strength
+				float impulseStrength = 200f;
+
+				// Apply impulse in facing direction
+				body.ApplyCentralImpulse(direction * impulseStrength);
+
+				// Add random spin
+				float torque = rng.RandfRange(-200f, 200f);
+				body.ApplyTorqueImpulse(torque);
+
+				// Optionally give it a lifetime so it despawns later
+				if (body.HasMethod("SetLifetime"))
+					body.Call("SetLifetime", 5.0f); // 5 seconds
+			}
+		}
 
 	}
 }

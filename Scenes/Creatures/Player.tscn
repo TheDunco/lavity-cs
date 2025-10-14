@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://bo3wlbfb6kci3"]
+[gd_scene load_steps=24 format=3 uid="uid://bo3wlbfb6kci3"]
 
 [ext_resource type="Script" uid="uid://1smbulwqiw1p" path="res://Scenes/Creatures/Player.cs" id="1_ohbs4"]
 [ext_resource type="Texture2D" uid="uid://bm24oyvrkln0t" path="res://Assets/moth-flying/moth-flying-1.png" id="2_f00fu"]
@@ -12,6 +12,7 @@
 [ext_resource type="AudioStream" uid="uid://6dy71wmtaiy3" path="res://Assets/Audio/sfx/wing_flap1.wav" id="6_s2fct"]
 [ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="7_fgvx3"]
 [ext_resource type="AudioStream" uid="uid://dveefh3mndixk" path="res://Assets/Audio/sfx/wing_flap2.wav" id="7_fwtcf"]
+[ext_resource type="AudioStream" uid="uid://cbeb1jf2k2yga" path="res://Assets/Audio/pop.wav" id="8_l3som"]
 
 [sub_resource type="Gradient" id="Gradient_kln2b"]
 colors = PackedColorArray(0.497474, 0.497474, 0.497474, 1, 0.498039, 0.498039, 0.498039, 1)
@@ -170,7 +171,7 @@ visible = false
 modulate = Color(1, 1, 1, 0.713945)
 z_index = 100
 material = SubResource("ShaderMaterial_l3som")
-scale = Vector2(0.1, 0.1)
+scale = Vector2(8, 8)
 texture = ExtResource("3_38ttt")
 
 [node name="PointLight2D" type="PointLight2D" parent="Repulse"]
@@ -182,7 +183,7 @@ texture = ExtResource("3_38ttt")
 
 [node name="RepulseSound" type="AudioStreamPlayer" parent="Repulse"]
 stream = ExtResource("4_38ttt")
-volume_db = -31.722
+volume_db = -26.615
 bus = &"Reverb Bus"
 
 [node name="RepulseAnimation" type="AnimationPlayer" parent="."]
@@ -209,6 +210,11 @@ volume_db = -27.964
 pitch_scale = 0.68
 bus = &"Reverb Bus"
 
+[node name="ProjectileSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_l3som")
+volume_db = -28.757
+bus = &"Reverb Bus"
+
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 material = ExtResource("5_uy4mh")
 position = Vector2(-4, -8)
@@ -223,3 +229,6 @@ scale = Vector2(2, 2)
 CollisionLayer = 2
 CollisionMask = 2
 PointUnitDistance = 200
+
+[node name="AudioListener2D" type="AudioListener2D" parent="."]
+current = true

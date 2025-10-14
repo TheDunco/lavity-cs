@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://co71ucnqnqjad"]
+
+[ext_resource type="Script" uid="uid://gjooqhxisuth" path="res://Scenes/Common/Projectile.cs" id="1_2y5nw"]
+[ext_resource type="Material" uid="uid://ql5ijw8ystro" path="res://Materials/AdditiveCanvasItemMaterial.tres" id="2_k3bje"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k3bje"]
+radius = 25.0
+
+[sub_resource type="Gradient" id="Gradient_dtmi6"]
+colors = PackedColorArray(1, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_76jte"]
+gradient = SubResource("Gradient_dtmi6")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.850427, 0.166667)
+
+[node name="Node2D" type="RigidBody2D"]
+mass = 0.5
+script = ExtResource("1_2y5nw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_k3bje")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = ExtResource("2_k3bje")
+texture = SubResource("GradientTexture2D_76jte")

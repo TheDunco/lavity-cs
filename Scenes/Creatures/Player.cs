@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public partial class Player : Creature
 {
@@ -15,8 +16,6 @@ public partial class Player : Creature
 	public double Health { get; private set; }
 	public double Fullness { get; private set; }
 	private StatsDisplay statsDisplay = null;
-
-	public List<Consumable> Stomach = [];
 
 	private Tween statTween;
 	private double pendingEnergy;
@@ -47,7 +46,8 @@ public partial class Player : Creature
 	// Light
 	private LavityLight PlayerLight = null;
 	private RandomNumberGenerator rng = null;
-
+	private PackedScene ProjectileScene = GD.Load<PackedScene>("res://Scenes/Common/Projectile.tscn");
+	private AudioStreamPlayer ProjectileSound = null;
 	public override void _Ready()
 	{
 		base._Ready();
@@ -61,6 +61,7 @@ public partial class Player : Creature
 		RepulseArea = GetNode<Area2D>("RepulseArea");
 		RepulseAnimation = GetNode<AnimationPlayer>("RepulseAnimation");
 		rng = GetNode<RngManager>("/root/RngManager").Rng;
+		ProjectileSound = GetNode<AudioStreamPlayer>("ProjectileSound");
 
 		Energy = MaxEnergy * 0.75;
 		Health = MaxHealth;
@@ -68,21 +69,35 @@ public partial class Player : Creature
 		var statsManager = GetNode<StatsManager>("/root/StatsManager");
 		statsManager.StatsTick += OnStatsTick;
 	}
+	public List<Consumable> GetStomachConsumables()
+	{
+		List<Consumable> ret = [];
+		var children = GetChildren();
+		foreach (Node n in children)
+		{
+			if (n is Consumable c)
+			{
+				ret.Add(c);
+			}
+		}
+		return ret;
+	}
+
 	public double GetCurrentFullness()
 	{
 		double fullness = 0;
-		foreach (var consumable in Stomach)
+		foreach (var consumable in GetStomachConsumables())
 		{
 			fullness += consumable.Effect.StomachSpace;
 		}
 		return fullness;
 	}
-	public void EatPlant(Consumable consumable)
+	public void EatConsumable(Consumable consumable)
 	{
 		double Fullness = GetCurrentFullness();
 		if (Fullness < MaxStomachSpace)
 		{
-			Stomach.Add(consumable);
+			consumable.Reparent(this);
 		}
 		else
 		{
@@ -117,9 +132,11 @@ public partial class Player : Creature
 
 		// Digest plants
 		var plantsDigestedThisTick = 0;
-		for (int i = Stomach.Count - 1; i >= 0; i--)
+		List<Consumable> stomachConsumables = GetStomachConsumables();
+		for (int i = GetStomachConsumables().Count - 1; i >= 0; i--)
 		{
-			var effect = Stomach[i].Effect;
+			var stomachConsumable = stomachConsumables[i];
+			var effect = stomachConsumables[i].Effect;
 			newEnergy += effect.EnergyMod;
 			newHealth += effect.HealthMod;
 
@@ -128,7 +145,7 @@ public partial class Player : Creature
 			plantsDigestedThisTick += 1;
 			if (effect.Duration <= 0 || effect.StomachSpace <= 0)
 			{
-				Stomach.RemoveAt(i);
+				RemoveChild(stomachConsumable);
 			}
 
 			if (plantsDigestedThisTick >= MaxPlantsDigestedPerCycle)
@@ -259,9 +276,9 @@ public partial class Player : Creature
 		{
 			var collision = this.GetLastSlideCollision();
 			var collider = collision.GetCollider();
-			if (collider is Consumable consumableCollision && !PlayerLight.IsEnabled())
+			if (collider is Consumable consumableCollision && !PlayerLight.IsEnabled() && IsInstanceValid(collider))
 			{
-				EatPlant(consumableCollision.OnConsume());
+				EatConsumable(consumableCollision.OnConsume());
 				OnConsumeSound?.Play();
 			}
 
@@ -285,16 +302,13 @@ public partial class Player : Creature
 		Energy -= 10;
 		RepulseAnimation.CurrentAnimation = "Repulse";
 
-		// Base parameters
-		float repulseStrength = 98 * 4f; // base impulse magnitude (tweak to taste)
-		float charVelocityMultiplier = 10f; // multiplier for CharacterBody2D; tune for feel
+		float repulseStrength = 98 * 4f;
+		float charVelocityMultiplier = 10f;
 
-		// Determine max radius from the area collision shape (assumes a CircleShape2D or a rectangular shape)
 		float maxRadius = 0f;
 		var cs = RepulseArea.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
 		if (cs != null && cs.Shape != null)
 		{
-			// If it's a CircleShape2D use radius, otherwise approximate from bounding rect
 			if (cs.Shape is CircleShape2D cshape)
 				maxRadius = cshape.Radius;
 			else
@@ -302,7 +316,6 @@ public partial class Player : Creature
 		}
 		else
 		{
-			// fallback
 			maxRadius = 200f;
 		}
 
@@ -310,14 +323,13 @@ public partial class Player : Creature
 
 		foreach (PhysicsBody2D node in RepulseArea.GetOverlappingBodies())
 		{
-			if (node == this) // don't push self
+			if (node == this)
 				continue;
 
-			// compute vector from origin to body
 			Vector2 toBody = node.GlobalPosition - origin;
 			float distance = toBody.Length();
 			if (distance <= 0.001f)
-				continue; // ignore bodies exactly on origin
+				continue;
 
 			Vector2 direction = toBody / distance;
 
@@ -325,23 +337,50 @@ public partial class Player : Creature
 			float t = Mathf.Clamp(distance / maxRadius, 0f, 1f);
 			float falloff = Mathf.Pow(1f - t, 2f);
 
-			// final impulse magnitude (tweak repulseStrength or falloff as needed)
 			float impulseMagnitude = repulseStrength * falloff;
 
 			if (node is RigidBody2D rigidBody)
 			{
-				// Impulse acts immediately; mass is accounted for by the physics engine
-				// Multiply if you want a stronger instantaneous effect:
 				rigidBody.ApplyCentralImpulse(direction * impulseMagnitude);
 			}
 			else if (node is CharacterBody2D charBody)
 			{
-				// CharacterBody2D doesn't accept impulses — modify its velocity instead.
-				// Additive so existing player/enemy motion is preserved.
 				charBody.Velocity += direction * impulseMagnitude * charVelocityMultiplier;
 			}
 		}
 
+	}
+
+	private void FireProjectile()
+	{
+		List<Consumable> stomachConsumables = GetStomachConsumables();
+
+		if (stomachConsumables.Count == 0)
+			return;
+
+		int index = stomachConsumables.Count - 1;
+		var stomachConsumable = stomachConsumables[index];
+		RemoveChild(stomachConsumable);
+
+		float spawnOffset = 50;
+
+		Vector2 direction = new Vector2(Mathf.Cos(GlobalRotation), Mathf.Sin(GlobalRotation)).Normalized();
+
+		Projectile projectile = ProjectileScene.Instantiate<Projectile>();
+		AddChild(projectile);
+		projectile.Reparent(GetTree().CurrentScene);
+
+		projectile.GlobalPosition = GlobalPosition + direction * spawnOffset;
+
+		float impulseStrength = 1333;
+
+		projectile.ApplyCentralImpulse(direction * impulseStrength);
+
+		float torque = rng.RandfRange(-200f, 200f);
+		projectile.ApplyTorqueImpulse(torque);
+
+		projectile.SetLifetime(5);
+		ProjectileSound.Play();
 	}
 
 	public override void _UnhandledInput(InputEvent @event)
@@ -360,56 +399,7 @@ public partial class Player : Creature
 
 		if (@event.IsActionPressed("FireProjectile"))
 		{
-			if (Stomach.Count == 0)
-				return; // nothing to fire!
-
-			int index = Stomach.Count - 1;
-			Consumable projectile = Stomach[index];
-			if (projectile.IsQueuedForDeletion())
-			{
-				return;
-			}
-			Stomach.RemoveAt(index);
-
-			// Convert Consumable to projectile
-			projectile.SetScript(GD.Load<Script>("res://Scenes/Common/Projectile.cs"));
-			projectile.ProcessMode = ProcessModeEnum.Always;
-
-			// Make sure the projectile is an active physics body
-			if (projectile is RigidBody2D body)
-			{
-				// Ensure it's visible and detached from player
-				body.Reparent(GetTree().CurrentScene);
-
-				body.GlobalPosition = GlobalPosition;
-
-				// Reset rotation & velocity before firing
-				body.Rotation = GlobalRotation;
-				body.LinearVelocity = Vector2.Zero;
-				body.AngularVelocity = 0;
-
-				// Compute base direction: player facing
-				Vector2 direction = new Vector2(Mathf.Cos(GlobalRotation), Mathf.Sin(GlobalRotation)).Normalized();
-
-				// Add a small random spread (optional)
-				float spreadAngle = rng.RandfRange(-0.15f, 0.15f); // ~±9 degrees
-				direction = direction.Rotated(spreadAngle);
-
-				// Fire speed / impulse strength
-				float impulseStrength = 200f;
-
-				// Apply impulse in facing direction
-				body.ApplyCentralImpulse(direction * impulseStrength);
-
-				// Add random spin
-				float torque = rng.RandfRange(-200f, 200f);
-				body.ApplyTorqueImpulse(torque);
-
-				// Optionally give it a lifetime so it despawns later
-				if (body.HasMethod("SetLifetime"))
-					body.Call("SetLifetime", 5.0f); // 5 seconds
-			}
+			FireProjectile();
 		}
-
 	}
 }

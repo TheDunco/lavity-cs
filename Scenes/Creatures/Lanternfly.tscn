@@ -1,10 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://c8osc7h6gnycu"]
+[gd_scene load_steps=11 format=3 uid="uid://c8osc7h6gnycu"]
 
 [ext_resource type="Script" uid="uid://c2lfb1cayxsnj" path="res://Scenes/Creatures/Lanternfly.cs" id="1_14ff2"]
 [ext_resource type="Texture2D" uid="uid://c6x1rg18fv05e" path="res://Assets/Laternfly/full-lanternfly_0001.png" id="1_xgs3h"]
 [ext_resource type="Texture2D" uid="uid://femwxhkk3ix7" path="res://Assets/Laternfly/full-lanternfly_0002.png" id="2_owse1"]
 [ext_resource type="Texture2D" uid="uid://bl2locgb6yf75" path="res://Assets/Laternfly/full-lanternfly_0003.png" id="3_14ff2"]
 [ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="4_owse1"]
+[ext_resource type="AudioStream" uid="uid://wqnbely6vogd" path="res://Assets/Audio/sfx/pop.wav" id="6_x2pff"]
+[ext_resource type="AudioStream" uid="uid://ypyrim6qxv6d" path="res://Assets/Audio/sfx/lanternfly_buzz.wav" id="7_x65qa"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xgs3h"]
 radius = 14.0
@@ -57,3 +59,15 @@ speed_scale = 5.0
 position = Vector2(22, -5)
 scale = Vector2(0.8, 0.8)
 LavityLightColor = Color(1, 0.151344, 0.108333, 1)
+
+[node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_x2pff")
+volume_db = -17.414
+pitch_scale = 0.48
+bus = &"Reverb Bus"
+
+[node name="Buzz" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_x65qa")
+volume_db = -20.893
+autoplay = true
+bus = &"Reverb Bus"

@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using System.Collections.Generic;
 
 public partial class WorldManager : Node2D
@@ -33,6 +32,11 @@ public partial class WorldManager : Node2D
 		Vector2 normal = (edge - spawnIsland.Center).Normalized();
 		Vector2 spawnPoint = edge + normal * 100f; // offset away from island
 		player.Position = spawnPoint;
+	}
+
+	public void AddNode(Node node)
+	{
+		AddChild(node);
 	}
 
 	public void GenerateIslands()

@@ -37,7 +37,7 @@ public partial class StatsDisplay : CanvasLayer
 		{
 			StomachContentsContainer.RemoveChild(n);
 		}
-		foreach (Consumable c in Player.Stomach)
+		foreach (Consumable c in Player.GetStomachConsumables())
 		{
 			AddConsumableToStomachContents(c);
 		}
@@ -45,6 +45,11 @@ public partial class StatsDisplay : CanvasLayer
 
 	private void AddConsumableToStomachContents(Consumable consumable)
 	{
+		if (!IsInstanceValid(consumable))
+		{
+			return;
+		}
+
 		MarginContainer container = new()
 		{
 			SizeFlagsVertical = Control.SizeFlags.ShrinkCenter

@@ -362,7 +362,7 @@ public partial class Player : Creature
 		var stomachConsumable = stomachConsumables[index];
 		RemoveChild(stomachConsumable);
 
-		float spawnOffset = 50;
+		float spawnOffset = 60;
 
 		Vector2 direction = new Vector2(Mathf.Cos(GlobalRotation), Mathf.Sin(GlobalRotation)).Normalized();
 

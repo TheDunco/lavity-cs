@@ -50,6 +50,8 @@ public partial class Lanternfly : Creature
 
 		// TODO: Play particle animation
 		// TODO: Play sound
+		DeathSound.Reparent(GetTree().CurrentScene);
+		DeathSound.Finished += () => DeathSound.QueueFree();
 		DeathSound.Play();
 		QueueFree();
 	}

@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://c8osc7h6gnycu"]
+[gd_scene load_steps=12 format=3 uid="uid://c8osc7h6gnycu"]
 
 [ext_resource type="Script" uid="uid://c2lfb1cayxsnj" path="res://Scenes/Creatures/Lanternfly.cs" id="1_14ff2"]
 [ext_resource type="Texture2D" uid="uid://c6x1rg18fv05e" path="res://Assets/Laternfly/full-lanternfly_0001.png" id="1_xgs3h"]
+[ext_resource type="Material" uid="uid://ql5ijw8ystro" path="res://Materials/AdditiveCanvasItemMaterial.tres" id="2_ccswi"]
 [ext_resource type="Texture2D" uid="uid://femwxhkk3ix7" path="res://Assets/Laternfly/full-lanternfly_0002.png" id="2_owse1"]
 [ext_resource type="Texture2D" uid="uid://bl2locgb6yf75" path="res://Assets/Laternfly/full-lanternfly_0003.png" id="3_14ff2"]
 [ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="4_owse1"]
@@ -49,6 +50,7 @@ shape = SubResource("CircleShape2D_owse1")
 debug_color = Color(1, 0.113725, 0.227451, 0.0196078)
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
+material = ExtResource("2_ccswi")
 position = Vector2(-18, -14)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_x2pff")

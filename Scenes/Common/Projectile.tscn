@@ -4,16 +4,17 @@
 [ext_resource type="Material" uid="uid://ql5ijw8ystro" path="res://Materials/AdditiveCanvasItemMaterial.tres" id="2_k3bje"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_k3bje"]
-radius = 25.0
+radius = 30.0167
 
 [sub_resource type="Gradient" id="Gradient_dtmi6"]
-colors = PackedColorArray(1, 0, 0, 1, 0, 0, 0, 0)
+offsets = PackedFloat32Array(0.281579, 1)
+colors = PackedColorArray(0.914634, 0.716067, 0.110981, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_76jte"]
 gradient = SubResource("Gradient_dtmi6")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(0.850427, 0.166667)
+fill_to = Vector2(0.508547, 0)
 
 [node name="Node2D" type="RigidBody2D"]
 mass = 0.5

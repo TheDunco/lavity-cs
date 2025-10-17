@@ -56,7 +56,7 @@ public class Island
 			var poly = new Polygon2D
 			{
 				Polygon = surfacePoints.ToArray(),
-				Color = new Color(0.12f, 0.12f, 0.18f, 1f),
+				Color = Colors.SandyBrown, //new Color(0.235f, 0.15f, 0.05f, 1f),
 				ClipChildren = CanvasItem.ClipChildrenMode.AndDraw
 			};
 			renderInstance.AddChild(poly);

@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 public partial class Player : Creature
 {
@@ -30,7 +29,7 @@ public partial class Player : Creature
 	private AudioStreamPlayer WingFlapSounds = null;
 
 	// Camera
-	private Camera2D Camera = null;
+	private CameraController Camera = null;
 	[Export] public float ZoomSpeed = 1f;     // How fast zoom target changes when holding
 	[Export] public float MinZoom = 0.5f;       // Minimum zoom factor
 	[Export] public float MaxZoom = 2.0f;       // Maximum zoom factor
@@ -53,7 +52,7 @@ public partial class Player : Creature
 		base._Ready();
 		Sprite = GetNode<AnimatedSprite2D>("Sprite");
 		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
-		Camera = GetNode<Camera2D>("Camera");
+		Camera = GetNode<CameraController>("../Camera");
 		targetZoom = Camera.Zoom;
 		PlayerLight = GetNode<LavityLight>("LavityLight");
 		OnConsumeSound = GetNode<AudioStreamPlayer>("OnConsumeSound");
@@ -301,6 +300,7 @@ public partial class Player : Creature
 	{
 		Energy -= 10;
 		RepulseAnimation.CurrentAnimation = "Repulse";
+		Camera.Shake(1f, 2.25f);
 
 		float repulseStrength = 98 * 4f;
 		float charVelocityMultiplier = 10f;
@@ -358,11 +358,13 @@ public partial class Player : Creature
 		if (stomachConsumables.Count == 0)
 			return;
 
+		Camera.Shake(0.7f, 0.5f);
+
 		int index = stomachConsumables.Count - 1;
 		var stomachConsumable = stomachConsumables[index];
 		RemoveChild(stomachConsumable);
 
-		float spawnOffset = 60;
+		int spawnOffset = 100;
 
 		Vector2 direction = new Vector2(Mathf.Cos(GlobalRotation), Mathf.Sin(GlobalRotation)).Normalized();
 
@@ -370,7 +372,7 @@ public partial class Player : Creature
 		AddChild(projectile);
 		projectile.Reparent(GetTree().CurrentScene);
 
-		projectile.GlobalPosition = GlobalPosition + direction * spawnOffset;
+		projectile.GlobalPosition = GlobalPosition + (direction * spawnOffset);
 
 		float impulseStrength = 1333;
 

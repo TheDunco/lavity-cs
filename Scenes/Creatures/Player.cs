@@ -175,7 +175,7 @@ public partial class Player : Creature
 		{
 			GetTree().Quit();
 		}
-		else if (Health < MaxHealth * 0.2)
+		else if (Health < MaxHealth * 0.25)
 		{
 			PlayerLight.SetColor(Colors.Red);
 		}
@@ -183,7 +183,7 @@ public partial class Player : Creature
 		{
 			PlayerLight.SetColor(Colors.White);
 		}
-		Acceleration = (int)Mathf.Remap(Energy, 0f, 100f, 0.5 * BaseAcceleration, 1.25 * BaseAcceleration);
+		Acceleration = (int)Mathf.Remap(Energy, 0f, 100f, 0.5 * BaseAcceleration, 1.5 * BaseAcceleration);
 	}
 
 	public override void _Process(double delta)

@@ -83,10 +83,11 @@ public partial class Lanternfly : Creature
 				consumable.OnConsume();
 				consumable.Reparent(this);
 				Damage += 2;
-				Vector2 Upscale = new(1.2f, 1.2f);
+				float UpscaleFactor = 1.15f;
+				Vector2 Upscale = new(UpscaleFactor, UpscaleFactor);
 				Scale *= Upscale;
 				lavityLight.Scale *= Upscale;
-				Acceleration *= 1.2f;
+				Acceleration *= UpscaleFactor;
 			}
 		}
 	}

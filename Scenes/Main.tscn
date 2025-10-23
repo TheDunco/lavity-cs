@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://brmf752ifplp0"]
+[gd_scene load_steps=15 format=3 uid="uid://brmf752ifplp0"]
 
 [ext_resource type="Script" uid="uid://xnmxsimfjq8h" path="res://Scenes/WorldManager.cs" id="1_50glp"]
 [ext_resource type="PackedScene" uid="uid://bo3wlbfb6kci3" path="res://Scenes/Creatures/Player.tscn" id="2_idj7w"]
@@ -11,19 +11,36 @@
 [ext_resource type="Script" uid="uid://dquhid4jt57mq" path="res://Scenes/Common/CameraController.cs" id="7_4kpch"]
 [ext_resource type="Texture2D" uid="uid://bqa6koxf6hkc4" path="res://Assets/UI/progress-bar-circle.png" id="7_jw32o"]
 [ext_resource type="Texture2D" uid="uid://ddxv2qx6a10xw" path="res://Assets/UI/progress-bar-frame.png" id="8_50glp"]
+[ext_resource type="Shader" uid="uid://dk2giajmcndcp" path="res://Shaders/Vingette.gdshader" id="8_grg3l"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_50glp"]
 noise_type = 3
 frequency = 0.003
 fractal_gain = 0.2
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_frkhe"]
+shader = ExtResource("8_grg3l")
+shader_parameter/outerRadius = 0.917
+shader_parameter/MainAlpha = 0.654
+
 [node name="WorldManager" type="Node2D"]
 script = ExtResource("1_50glp")
 PlantPrefabs = Array[PackedScene]([ExtResource("5_v1gob"), ExtResource("3_vy5pj"), ExtResource("4_bmxlf")])
 noise = SubResource("FastNoiseLite_50glp")
 
+[node name="VingetteOverlay" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_frkhe")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
-color = Color(0.244776, 0.244776, 0.244776, 1)
+color = Color(0.295866, 0.295867, 0.295866, 1)
 
 [node name="DirectionalDarkness" type="DirectionalLight2D" parent="."]
 visible = false

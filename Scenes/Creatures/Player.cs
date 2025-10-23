@@ -47,6 +47,7 @@ public partial class Player : Creature
 	private RandomNumberGenerator rng = null;
 	private PackedScene ProjectileScene = GD.Load<PackedScene>("res://Scenes/Common/Projectile.tscn");
 	private AudioStreamPlayer ProjectileSound = null;
+	private LavityLight lavityLight = null;
 	public override void _Ready()
 	{
 		base._Ready();
@@ -61,6 +62,7 @@ public partial class Player : Creature
 		RepulseAnimation = GetNode<AnimationPlayer>("RepulseAnimation");
 		rng = GetNode<RngManager>("/root/RngManager").Rng;
 		ProjectileSound = GetNode<AudioStreamPlayer>("ProjectileSound");
+		lavityLight = GetNode<LavityLight>("LavityLight");
 
 		Energy = MaxEnergy * 0.75;
 		Health = MaxHealth;
@@ -172,6 +174,14 @@ public partial class Player : Creature
 		if (Health == 0)
 		{
 			GetTree().Quit();
+		}
+		else if (Health < MaxHealth * 0.2)
+		{
+			PlayerLight.SetColor(Colors.Red);
+		}
+		else
+		{
+			PlayerLight.SetColor(Colors.White);
 		}
 		Acceleration = (int)Mathf.Remap(Energy, 0f, 100f, 0.5 * BaseAcceleration, 1.25 * BaseAcceleration);
 	}

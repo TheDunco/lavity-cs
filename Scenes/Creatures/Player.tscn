@@ -15,7 +15,8 @@
 [ext_resource type="AudioStream" uid="uid://cbeb1jf2k2yga" path="res://Assets/Audio/pop.wav" id="8_l3som"]
 
 [sub_resource type="Gradient" id="Gradient_kln2b"]
-colors = PackedColorArray(0.497474, 0.497474, 0.497474, 1, 0.498039, 0.498039, 0.498039, 1)
+offsets = PackedFloat32Array(0.544737)
+colors = PackedColorArray(0.362829, 0.362829, 0.362829, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_fgvx3"]
 gradient = SubResource("Gradient_kln2b")

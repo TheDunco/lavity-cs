@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 public partial class Lanternfly : Creature
@@ -8,6 +9,8 @@ public partial class Lanternfly : Creature
 	private PackedScene ConsumableScene = null;
 	private RandomNumberGenerator rng = null;
 	private AudioStreamPlayer2D DeathSound = null;
+	private LavityLight lavityLight = null;
+	private int SeedsConsumed = 0;
 	public override void _Ready()
 	{
 		BaseAcceleration = 4;
@@ -18,6 +21,7 @@ public partial class Lanternfly : Creature
 		PerceptionArea.BodyEntered += OnBodyEnteredPerceptionArea;
 		PerceptionArea.BodyExited += OnBodyExitedPerceptionArea;
 		DeathSound = GetNode<AudioStreamPlayer2D>("DeathSound");
+		lavityLight = GetNode<LavityLight>("LavityLight");
 
 		ConsumableScene = GD.Load<PackedScene>("res://Scenes/Environment/Plants/SeedConsumable.tscn");
 		rng = GetNode<RngManager>("/root/RngManager").Rng;
@@ -25,7 +29,7 @@ public partial class Lanternfly : Creature
 
 	public void Kill()
 	{
-		int consumableCount = rng.RandiRange(1, 4);
+		int consumableCount = rng.RandiRange(Math.Max(1, SeedsConsumed), 4 + SeedsConsumed);
 		Node rootScene = GetTree().CurrentScene;
 		do
 		{
@@ -35,9 +39,9 @@ public partial class Lanternfly : Creature
 			{
 
 				Duration = 20,
-				EnergyMod = 4,
+				EnergyMod = 5,
 				HealthMod = 2,
-				Name = "Lanternfly Consumable",
+				Name = "Lanternfly Kill Consumable",
 				StomachSpace = 10,
 				StomachTextureSprite = consumable.GetStomachTextureSprite()
 
@@ -49,7 +53,6 @@ public partial class Lanternfly : Creature
 		} while (consumableCount > 0);
 
 		// TODO: Play particle animation
-		// TODO: Play sound
 		DeathSound.Reparent(GetTree().CurrentScene);
 		DeathSound.Finished += () => DeathSound.QueueFree();
 		DeathSound.Play();
@@ -70,7 +73,22 @@ public partial class Lanternfly : Creature
 			Sprite.Stop();
 		}
 		OrientByRotation();
-		MoveAndSlide();
+		bool didCollide = MoveAndSlide();
+		if (didCollide)
+		{
+			var collision = this.GetLastSlideCollision();
+			var collider = collision.GetCollider();
+			if (collider is Consumable consumable)
+			{
+				consumable.OnConsume();
+				consumable.Reparent(this);
+				Damage += 2;
+				Vector2 Upscale = new(1.2f, 1.2f);
+				Scale *= Upscale;
+				lavityLight.Scale *= Upscale;
+				Acceleration *= 1.2f;
+			}
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)

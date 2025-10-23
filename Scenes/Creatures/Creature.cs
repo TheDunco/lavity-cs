@@ -3,8 +3,8 @@ using System;
 
 public abstract partial class Creature : CharacterBody2D
 {
-	[Export] internal int BaseAcceleration = 3;
-	internal int Acceleration;
+	[Export] internal int BaseAcceleration = 5;
+	internal float Acceleration;
 	public int Damage = 2;
 	public override void _Ready()
 	{

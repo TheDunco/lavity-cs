@@ -5,10 +5,8 @@ uniform float softness : hint_range(0.0, 2.0) = 0.5;
 uniform float alpha : hint_range(0.0, 2.0) = 1.0;
 
 void fragment() {
-	float aspect_ratio = 9.0 / 16.0;
     // Centered UV coordinates (-1 to 1 range)
     vec2 centered_uv = (UV - vec2(0.5)) * 2.0;
-	centered_uv.x *= aspect_ratio;
     
     // Radial distance from center
     float dist = length(centered_uv);

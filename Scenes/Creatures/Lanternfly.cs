@@ -81,6 +81,11 @@ public partial class Lanternfly : Creature
 			{
 				consumable.OnConsume();
 				consumable.Reparent(this);
+				SeedsConsumed += 1;
+				if (consumable.Effect.Name == "Lanternfly Kill Consumable")
+				{
+					Kill();
+				}
 				Damage += 2;
 				float UpscaleFactor = 1.15f;
 				Vector2 Upscale = new(UpscaleFactor, UpscaleFactor);

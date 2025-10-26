@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public partial class Firefly : Creature
 {
 	private Player Player = null;
-	private List<Firefly> Kin = [];
-	private List<Creature> Enemies = [];
+	private readonly List<Firefly> Kin = [];
+	private readonly List<Creature> Enemies = [];
 	private Firefly ClosestKin = null;
 	private Creature ClosestEnemy = null;
 	public override void _Ready()

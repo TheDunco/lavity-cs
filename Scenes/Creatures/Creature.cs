@@ -6,9 +6,22 @@ public abstract partial class Creature : CharacterBody2D
 	[Export] internal int BaseAcceleration = 5;
 	internal float Acceleration;
 	public int Damage = 2;
+	internal Area2D PerceptionArea = null;
+	internal AnimatedSprite2D Sprite = null;
 	public override void _Ready()
 	{
 		base._Ready();
+		PerceptionArea = GetNode<Area2D>("PerceptionArea");
+		Sprite = GetNode<AnimatedSprite2D>("Sprite");
+
+		Sprite.Play();
+
+		if (PerceptionArea != null)
+		{
+			PerceptionArea.BodyEntered += OnBodyEnteredPerceptionArea;
+			PerceptionArea.BodyExited += OnBodyExitedPerceptionArea;
+		}
+
 		Acceleration = BaseAcceleration;
 	}
 
@@ -37,5 +50,13 @@ public abstract partial class Creature : CharacterBody2D
 
 			Scale = new Vector2(Scale.X, Math.Abs(Scale.Y));
 		}
+	}
+
+	internal virtual void OnBodyEnteredPerceptionArea(Node body)
+	{
+	}
+
+	internal virtual void OnBodyExitedPerceptionArea(Node body)
+	{
 	}
 }

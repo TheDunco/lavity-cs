@@ -3,9 +3,7 @@ using Godot;
 
 public partial class Lanternfly : Creature
 {
-	private Area2D PerceptionArea = null;
 	private Player Player = null;
-	private AnimatedSprite2D Sprite = null;
 	private PackedScene ConsumableScene = null;
 	private RandomNumberGenerator rng = null;
 	private AudioStreamPlayer2D DeathSound = null;
@@ -16,10 +14,6 @@ public partial class Lanternfly : Creature
 		BaseAcceleration = 3;
 		Damage = 8;
 		base._Ready();
-		PerceptionArea = GetNode<Area2D>("PerceptionArea");
-		Sprite = GetNode<AnimatedSprite2D>("Sprite");
-		PerceptionArea.BodyEntered += OnBodyEnteredPerceptionArea;
-		PerceptionArea.BodyExited += OnBodyExitedPerceptionArea;
 		DeathSound = GetNode<AudioStreamPlayer2D>("DeathSound");
 		lavityLight = GetNode<LavityLight>("LavityLight");
 
@@ -103,7 +97,7 @@ public partial class Lanternfly : Creature
 	}
 
 
-	private void OnBodyEnteredPerceptionArea(Node2D body)
+	internal override void OnBodyEnteredPerceptionArea(Node body)
 	{
 		if (body is Player seenPlayer)
 		{
@@ -111,7 +105,7 @@ public partial class Lanternfly : Creature
 		}
 	}
 
-	private void OnBodyExitedPerceptionArea(Node2D body)
+	internal override void OnBodyExitedPerceptionArea(Node body)
 	{
 		if (body is Player)
 		{

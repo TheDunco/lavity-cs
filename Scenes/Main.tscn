@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://brmf752ifplp0"]
+[gd_scene load_steps=15 format=3 uid="uid://brmf752ifplp0"]
 
 [ext_resource type="Script" uid="uid://xnmxsimfjq8h" path="res://Scenes/WorldManager.cs" id="1_50glp"]
 [ext_resource type="PackedScene" uid="uid://bo3wlbfb6kci3" path="res://Scenes/Creatures/Player.tscn" id="2_idj7w"]
 [ext_resource type="AudioStream" uid="uid://4hmkl3nrbvfr" path="res://Assets/Audio/music/A Moth in Light.wav" id="2_kln2b"]
 [ext_resource type="PackedScene" uid="uid://dyakwmxk4lpqf" path="res://Scenes/Environment/Plants/NormalPlant2.tscn" id="3_vy5pj"]
+[ext_resource type="PackedScene" uid="uid://s43hmwfl4ho5" path="res://Scenes/Environment/Plants/NormalPlant3.tscn" id="4_grg3l"]
 [ext_resource type="Environment" uid="uid://bfvcvbom7pewe" path="res://Scenes/Environment/WorldEnvironment.tres" id="5_jw32o"]
 [ext_resource type="PackedScene" uid="uid://c10t3xhlchnw2" path="res://Scenes/Environment/Plants/NormalPlant1.tscn" id="5_v1gob"]
 [ext_resource type="Script" uid="uid://btbu44y32eejh" path="res://Scenes/Common/StatsDisplay.cs" id="6_v1gob"]
@@ -26,7 +27,7 @@ shader_parameter/noise_strength = 0.05
 
 [node name="WorldManager" type="Node2D"]
 script = ExtResource("1_50glp")
-PlantPrefabs = Array[PackedScene]([ExtResource("5_v1gob"), ExtResource("3_vy5pj")])
+PlantPrefabs = Array[PackedScene]([ExtResource("5_v1gob"), ExtResource("3_vy5pj"), ExtResource("4_grg3l")])
 noise = SubResource("FastNoiseLite_50glp")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]

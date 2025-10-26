@@ -1,0 +1,66 @@
+[gd_scene load_steps=10 format=3 uid="uid://dxvwomgvkr7wf"]
+
+[ext_resource type="Texture2D" uid="uid://p3ddt0p2no11" path="res://Assets/Firefly/firefly_0000.png" id="1_a5pae"]
+[ext_resource type="Script" uid="uid://yd3i6cv001ej" path="res://Scenes/Creatures/Firefly.cs" id="1_sgol3"]
+[ext_resource type="Texture2D" uid="uid://c0lgutb3g5cgi" path="res://Assets/Firefly/firefly_0001.png" id="2_ui8e0"]
+[ext_resource type="Texture2D" uid="uid://dv3v3yr6vawlo" path="res://Assets/Firefly/firefly_0002.png" id="3_sgol3"]
+[ext_resource type="Texture2D" uid="uid://pl2moo76nxvb" path="res://Assets/Firefly/firefly_0003.png" id="4_35fsx"]
+[ext_resource type="PackedScene" uid="uid://dn4dc1fkdpmus" path="res://Scenes/Common/LavityLight.tscn" id="5_ui8e0"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ui8e0"]
+radius = 9.0
+height = 94.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_k1haf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_a5pae")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ui8e0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_sgol3")
+}],
+"loop": true,
+"name": &"flying",
+"speed": 30.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_35fsx")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sgol3"]
+radius = 1700.0
+
+[node name="Firefly" type="CharacterBody2D"]
+script = ExtResource("1_sgol3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-6, 8)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_ui8e0")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_k1haf")
+animation = &"flying"
+frame_progress = 0.157754
+
+[node name="LavityLight" parent="." instance=ExtResource("5_ui8e0")]
+position = Vector2(-47, 9)
+scale = Vector2(0.5, 0.5)
+LavityLightColor = Color(0.654902, 0.866667, 0, 1)
+
+[node name="PerceptionArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PerceptionArea"]
+position = Vector2(23, 15)
+shape = SubResource("CircleShape2D_sgol3")
+debug_color = Color(0.729412, 0.47451, 0, 0.00784314)

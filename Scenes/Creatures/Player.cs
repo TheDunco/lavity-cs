@@ -25,7 +25,6 @@ public partial class Player : Creature
 	private float AirResistance = 0.0002f;
 	private float MaxVelocity = 1500;
 
-	private AnimatedSprite2D Sprite = null;
 	private AudioStreamPlayer WingFlapSounds = null;
 
 	// Camera
@@ -51,7 +50,6 @@ public partial class Player : Creature
 	public override void _Ready()
 	{
 		base._Ready();
-		Sprite = GetNode<AnimatedSprite2D>("Sprite");
 		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
 		Camera = GetNode<CameraController>("../Camera");
 		targetZoom = Camera.Zoom;
@@ -82,6 +80,11 @@ public partial class Player : Creature
 			}
 		}
 		return ret;
+	}
+
+	public bool IsLightOn()
+	{
+		return PlayerLight.IsEnabled();
 	}
 
 	public double GetCurrentFullness()

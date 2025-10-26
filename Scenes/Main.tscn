@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://brmf752ifplp0"]
+[gd_scene load_steps=14 format=3 uid="uid://brmf752ifplp0"]
 
 [ext_resource type="Script" uid="uid://xnmxsimfjq8h" path="res://Scenes/WorldManager.cs" id="1_50glp"]
 [ext_resource type="PackedScene" uid="uid://bo3wlbfb6kci3" path="res://Scenes/Creatures/Player.tscn" id="2_idj7w"]
@@ -10,11 +10,18 @@
 [ext_resource type="Script" uid="uid://dquhid4jt57mq" path="res://Scenes/Common/CameraController.cs" id="7_4kpch"]
 [ext_resource type="Texture2D" uid="uid://bqa6koxf6hkc4" path="res://Assets/UI/progress-bar-circle.png" id="7_jw32o"]
 [ext_resource type="Texture2D" uid="uid://ddxv2qx6a10xw" path="res://Assets/UI/progress-bar-frame.png" id="8_50glp"]
+[ext_resource type="Shader" uid="uid://dk2giajmcndcp" path="res://Shaders/Vingette.gdshader" id="8_grg3l"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_50glp"]
 noise_type = 3
 frequency = 0.003
 fractal_gain = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4kpch"]
+shader = ExtResource("8_grg3l")
+shader_parameter/outer_radius = 0.878
+shader_parameter/softness = 1.198
+shader_parameter/alpha = 2.0
 
 [node name="WorldManager" type="Node2D"]
 script = ExtResource("1_50glp")
@@ -52,6 +59,27 @@ TargetPath = NodePath("../Player")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("5_jw32o")
+
+[node name="VingnetteLayer" type="CanvasLayer" parent="."]
+
+[node name="Vingnette" type="ColorRect" parent="VingnetteLayer"]
+z_index = 999
+z_as_relative = false
+material = SubResource("ShaderMaterial_4kpch")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1500.0
+offset_top = -1500.0
+offset_right = 1500.0
+offset_bottom = 1500.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0, 0, 0, 1)
 
 [node name="StatsDisplay" type="CanvasLayer" parent="." node_paths=PackedStringArray("Player")]
 script = ExtResource("6_v1gob")

@@ -13,7 +13,7 @@ public partial class Lanternfly : Creature
 	private int SeedsConsumed = 0;
 	public override void _Ready()
 	{
-		BaseAcceleration = 4;
+		BaseAcceleration = 3;
 		Damage = 8;
 		base._Ready();
 		PerceptionArea = GetNode<Area2D>("PerceptionArea");
@@ -53,7 +53,7 @@ public partial class Lanternfly : Creature
 		} while (consumableCount > 0);
 
 		// TODO: Play particle animation
-		DeathSound.Reparent(GetTree().CurrentScene);
+		DeathSound.Reparent(rootScene);
 		DeathSound.Finished += () => DeathSound.QueueFree();
 		DeathSound.Play();
 		QueueFree();
@@ -66,7 +66,6 @@ public partial class Lanternfly : Creature
 		{
 			MoveToward(Player.GlobalPosition);
 			Sprite.Play();
-
 		}
 		else
 		{

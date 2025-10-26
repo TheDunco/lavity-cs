@@ -2,12 +2,14 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class Island
+public partial class Island : Node2D
 {
 	public Vector2 Center { get; private set; }
 	public float Radius { get; private set; }
 	public ulong Seed { get; private set; }
 	public bool IsRendered { get; private set; } = false;
+	public bool HasRendered { get; private set; } = false;
+	public Vector2I PlantSpawnChanceRange { get; set; } = new(5, 13);
 
 	private Node2D renderInstance;
 	private List<Vector2> SurfacePoints = [];
@@ -57,7 +59,7 @@ public class Island
 			{
 				Polygon = surfacePoints.ToArray(),
 				Color = Colors.SandyBrown, //new Color(0.235f, 0.15f, 0.05f, 1f),
-				ClipChildren = CanvasItem.ClipChildrenMode.AndDraw
+				ClipChildren = ClipChildrenMode.AndDraw
 			};
 			renderInstance.AddChild(poly);
 
@@ -79,34 +81,16 @@ public class Island
 			occluder.Occluder = occPoly;
 			renderInstance.AddChild(occluder);
 
-			// --- Plants ---
+			SurfacePoints = surfacePoints;
+
+			// Spawn plants
 			if (plantPrefabs != null && plantPrefabs.Length > 0)
 			{
-				int plantCount = rng.RandiRange(5, 15); // density can be adjusted
-				for (int k = 0; k < plantCount; k++)
-				{
-					int idx = rng.RandiRange(0, surfacePoints.Count - 1);
-					Vector2 pos = surfacePoints[idx];
-					Vector2 normal = (pos - Center).Normalized();
-
-					var prefab = plantPrefabs[rng.RandiRange(0, plantPrefabs.Length - 1)];
-					var plant = prefab.Instantiate<Node2D>();
-					if (plant is Lanternfly lanternfly)
-					{
-						lanternfly.Position = pos + normal * 50;
-					}
-					else
-					{
-
-						plant.Position = pos;
-					}
-					plant.Rotation = normal.Angle() + Mathf.Pi / 2f;
-					renderInstance.AddChild(plant);
-				}
+				SpawnPrefabs(plantPrefabs, PlantSpawnChanceRange, rng);
 			}
 
 			IsRendered = true;
-			SurfacePoints = surfacePoints;
+			HasRendered = true;
 
 		}
 		catch (Exception e)
@@ -116,6 +100,31 @@ public class Island
 				GD.PrintErr("Failed to render island");
 				return;
 			}
+		}
+	}
+
+	private void SpawnPrefabs(PackedScene[] prefabs, Vector2I chance, RandomNumberGenerator rng, int surfaceOffest = 0)
+	{
+		int plantCount = rng.RandiRange(chance.X, chance.Y); // density can be adjusted
+		for (int k = 0; k < plantCount; k++)
+		{
+			int idx = rng.RandiRange(0, SurfacePoints.Count - 1);
+			Vector2 pos = SurfacePoints[idx];
+			Vector2 normal = (pos - Center).Normalized();
+
+			var prefab = prefabs[rng.RandiRange(0, prefabs.Length - 1)];
+			var instance = prefab.Instantiate<Node2D>();
+			if (surfaceOffest > 0)
+			{
+				instance.Position = pos + normal * surfaceOffest;
+			}
+			else
+			{
+
+				instance.Position = pos;
+			}
+			instance.Rotation = normal.Angle() + Mathf.Pi / 2f;
+			renderInstance.AddChild(instance);
 		}
 	}
 

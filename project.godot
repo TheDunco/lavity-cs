@@ -85,6 +85,8 @@ FireProjectile={
 2d_physics/layer_3="Gravity - Player"
 2d_physics/layer_4="Gravity - Non Consumable"
 2d_physics/layer_5="Gravity - Consumable"
+2d_physics/layer_9="Player"
+2d_physics/layer_10="Creature"
 
 [physics]
 

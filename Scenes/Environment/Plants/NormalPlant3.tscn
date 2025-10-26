@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://s43hmwfl4ho5"]
+[gd_scene load_steps=10 format=3 uid="uid://s43hmwfl4ho5"]
 
 [ext_resource type="Script" uid="uid://dmfa5w1ickuvb" path="res://Scenes/Environment/Plants/Plant.cs" id="1_erteu"]
 [ext_resource type="PackedScene" uid="uid://cnbcmqfqfiiy4" path="res://Scenes/Environment/Plants/SeedConsumable.tscn" id="2_ddeqk"]
+[ext_resource type="PackedScene" uid="uid://c8osc7h6gnycu" path="res://Scenes/Creatures/Lanternfly.tscn" id="3_ddeqk"]
 [ext_resource type="Texture2D" uid="uid://c0junffo63ek6" path="res://Assets/Environment/Plants/bud_02.png" id="3_eafl1"]
 [ext_resource type="Texture2D" uid="uid://d2emlluupxa4h" path="res://Assets/Environment/Plants/leaf_04.png" id="4_p2uhs"]
 [ext_resource type="Texture2D" uid="uid://dqgyyuqiv4cq8" path="res://Assets/Environment/Plants/bud_04.png" id="5_mpg71"]
@@ -12,6 +13,7 @@
 [node name="NormalPlant1" type="Node2D"]
 script = ExtResource("1_erteu")
 Consumable = ExtResource("2_ddeqk")
+creature = ExtResource("3_ddeqk")
 ConsumableName = "Quick Hitter (18)"
 ConsumableDuration = 3
 ConsumableEnergyMod = 6.0

@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://dyakwmxk4lpqf"]
+[gd_scene load_steps=9 format=3 uid="uid://dyakwmxk4lpqf"]
 
 [ext_resource type="Script" uid="uid://dmfa5w1ickuvb" path="res://Scenes/Environment/Plants/Plant.cs" id="1_4ovqi"]
 [ext_resource type="PackedScene" uid="uid://c0h36vev8u0yd" path="res://Scenes/Environment/Plants/SeedConsumable2.tscn" id="2_h1d3c"]
+[ext_resource type="PackedScene" uid="uid://c8osc7h6gnycu" path="res://Scenes/Creatures/Lanternfly.tscn" id="3_4ovqi"]
 [ext_resource type="Texture2D" uid="uid://cagn2fw5v0f3r" path="res://Assets/Environment/Plants/stem_03.png" id="3_ut86j"]
 [ext_resource type="Texture2D" uid="uid://nf2ywtc1pcp3" path="res://Assets/Environment/Plants/blossom_03.png" id="6_urbfw"]
 [ext_resource type="Texture2D" uid="uid://boi0trabaks3s" path="res://Assets/Environment/Plants/blossom_02.png" id="6_yan7l"]
@@ -11,6 +12,7 @@
 [node name="NormalPlant1" type="Node2D"]
 script = ExtResource("1_4ovqi")
 Consumable = ExtResource("2_h1d3c")
+creature = ExtResource("3_4ovqi")
 ConsumableName = "Big (40)"
 ConsumableEnergyMod = 4.0
 ConsumableStomachSpace = 40.0

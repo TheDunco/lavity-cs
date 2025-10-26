@@ -374,7 +374,7 @@ public partial class Player : Creature
 		var stomachConsumable = stomachConsumables[index];
 		RemoveChild(stomachConsumable);
 
-		int spawnOffset = 100;
+		int spawnOffset = 90;
 
 		Vector2 direction = new Vector2(Mathf.Cos(GlobalRotation), Mathf.Sin(GlobalRotation)).Normalized();
 
@@ -384,7 +384,7 @@ public partial class Player : Creature
 
 		projectile.GlobalPosition = GlobalPosition + (direction * spawnOffset);
 
-		float impulseStrength = 1333;
+		float impulseStrength = 1500;
 
 		projectile.ApplyCentralImpulse(direction * impulseStrength);
 

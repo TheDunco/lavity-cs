@@ -18,11 +18,15 @@ public abstract partial class Creature : CharacterBody2D
 		Velocity += GlobalPosition.DirectionTo(pos) * (Acceleration + (GlobalPosition.DistanceTo(pos) * (1 / 100)));
 	}
 
+	public void Reparent(Node node)
+	{
+		base.Reparent(node);
+	}
 
 	internal void OrientByRotation()
 	{
 		var CurScaleY = Scale.Y;
-		double rotationCos = Math.Cos(Rotation);
+		double rotationCos = Math.Cos(GlobalRotation);
 		if (rotationCos < 0 && CurScaleY > 0)
 		{
 

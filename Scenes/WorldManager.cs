@@ -26,7 +26,6 @@ public partial class WorldManager : Node2D
 
 		Island spawnIsland = Islands[0]; // or pick largest/random
 
-		// TODO: Move the PlantPrefabs to be a per-island concept
 		spawnIsland.Render(this, PlantPrefabs, noise, rng);
 		Vector2 edge = spawnIsland.GetRandomSurfacePoint(rng);
 		Vector2 normal = (edge - spawnIsland.Center).Normalized();

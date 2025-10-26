@@ -3,6 +3,11 @@ shader_type canvas_item;
 uniform float outer_radius : hint_range(0.1, 5.0) = 1.0;
 uniform float softness : hint_range(0.0, 2.0) = 0.5;
 uniform float alpha : hint_range(0.0, 2.0) = 1.0;
+uniform float noise_strength : hint_range(0.0, 0.05) = 0.015;
+
+float rand(vec2 co) {
+    return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
+}
 
 void fragment() {
     // Centered UV coordinates (-1 to 1 range)
@@ -14,6 +19,8 @@ void fragment() {
     // Use smoothstep to create a soft falloff
     float vignette = smoothstep(outer_radius, outer_radius - softness, dist);
     
+	vignette += rand(UV) * noise_strength;
+	
     // Invert so the center is bright and edges dark
     float darkness = 1.0 - vignette * alpha;
 

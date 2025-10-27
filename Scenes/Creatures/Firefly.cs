@@ -9,10 +9,14 @@ public partial class Firefly : Creature
 	private readonly List<Creature> Enemies = [];
 	private Firefly ClosestKin = null;
 	private Creature ClosestEnemy = null;
+	private PackedScene ConsumableScene = null;
+	private RandomNumberGenerator rng = null;
 	public override void _Ready()
 	{
 		base._Ready();
 		StatsManager statsManager = GetNode<StatsManager>("/root/StatsManager");
+		ConsumableScene = GD.Load<PackedScene>("res://Scenes/Environment/Plants/SeedConsumable.tscn");
+		rng = GetNode<RngManager>("/root/RngManager").Rng;
 
 		// Calculate the closest on StatsTick for performance
 		statsManager.StatsTick += () =>
@@ -66,6 +70,7 @@ public partial class Firefly : Creature
 		};
 	}
 
+
 	public override void _Process(double delta)
 	{
 		base._Process(delta);
@@ -106,9 +111,39 @@ public partial class Firefly : Creature
 			Sprite.Animation = "idle";
 		}
 		OrientByRotation();
-		MoveAndSlide();
+		bool didCollide = MoveAndSlide();
+		if (didCollide)
+		{
+			var collider = GetLastSlideCollision().GetCollider();
+			if (collider is Lanternfly)
+			{
+				Kill();
+			}
+		}
 	}
 
+	public override void Kill()
+	{
+		Consumable consumable = ConsumableScene.Instantiate<Consumable>();
+		consumable.Modulate = LavityLight.GetColor();
+		Node rootScene = GetTree().CurrentScene;
+
+		consumable.Effect = new PlantEffect
+		{
+
+			Duration = 10,
+			EnergyMod = 10,
+			HealthMod = 3,
+			Name = "Firefly Kill Consumable",
+			StomachSpace = 20,
+			StomachTextureSprite = consumable.GetStomachTextureSprite()
+		};
+		consumable.GlobalPosition = GlobalPosition + new Vector2I(rng.RandiRange(-10, 10), rng.RandiRange(-10, 10));
+		consumable.LinearVelocity = Velocity;
+		rootScene.CallDeferred("AddNode", consumable);
+
+		base.Kill();
+	}
 
 	internal override void OnBodyEnteredPerceptionArea(Node body)
 	{

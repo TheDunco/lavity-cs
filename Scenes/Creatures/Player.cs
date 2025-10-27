@@ -42,25 +42,21 @@ public partial class Player : Creature
 	private AnimationPlayer RepulseAnimation = null;
 
 	// Light
-	private LavityLight PlayerLight = null;
 	private RandomNumberGenerator rng = null;
 	private PackedScene ProjectileScene = GD.Load<PackedScene>("res://Scenes/Common/Projectile.tscn");
 	private AudioStreamPlayer ProjectileSound = null;
-	private LavityLight lavityLight = null;
 	public override void _Ready()
 	{
 		base._Ready();
 		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
 		Camera = GetNode<CameraController>("../Camera");
 		targetZoom = Camera.Zoom;
-		PlayerLight = GetNode<LavityLight>("LavityLight");
 		OnConsumeSound = GetNode<AudioStreamPlayer>("OnConsumeSound");
 		statsDisplay = GetNode<StatsDisplay>("../StatsDisplay");
 		RepulseArea = GetNode<Area2D>("RepulseArea");
 		RepulseAnimation = GetNode<AnimationPlayer>("RepulseAnimation");
 		rng = GetNode<RngManager>("/root/RngManager").Rng;
 		ProjectileSound = GetNode<AudioStreamPlayer>("ProjectileSound");
-		lavityLight = GetNode<LavityLight>("LavityLight");
 
 		Energy = MaxEnergy * 0.75;
 		Health = MaxHealth;
@@ -84,7 +80,7 @@ public partial class Player : Creature
 
 	public bool IsLightOn()
 	{
-		return PlayerLight.IsEnabled();
+		return LavityLight.IsEnabled();
 	}
 
 	public double GetCurrentFullness()
@@ -118,7 +114,7 @@ public partial class Player : Creature
 		double newHealth = Health;
 
 		// Passive drain if light is on
-		if (PlayerLight.IsEnabled())
+		if (LavityLight.IsEnabled())
 			newEnergy -= 0.5;
 
 		if (IsInputAdded)
@@ -172,7 +168,7 @@ public partial class Player : Creature
 		Energy = Mathf.Clamp(newEnergy, 0, MaxEnergy);
 		Health = Mathf.Clamp(newHealth, 0, MaxHealth);
 
-		PlayerLight.SetEnergy(newEnergy);
+		LavityLight.SetEnergy(newEnergy);
 
 		if (Health == 0)
 		{
@@ -180,11 +176,11 @@ public partial class Player : Creature
 		}
 		else if (Health < MaxHealth * 0.25)
 		{
-			PlayerLight.SetColor(Colors.Red);
+			LavityLight.SetColor(Colors.Red);
 		}
 		else
 		{
-			PlayerLight.SetColor(Colors.White);
+			LavityLight.SetColor(Colors.White);
 		}
 		Acceleration = (int)Mathf.Remap(Energy, 0f, 100f, 0.5 * BaseAcceleration, 1.5 * BaseAcceleration);
 	}
@@ -288,7 +284,7 @@ public partial class Player : Creature
 		{
 			var collision = this.GetLastSlideCollision();
 			var collider = collision.GetCollider();
-			if (collider is Consumable consumableCollision && !PlayerLight.IsEnabled() && IsInstanceValid(collider))
+			if (collider is Consumable consumableCollision && !LavityLight.IsEnabled() && IsInstanceValid(collider))
 			{
 				EatConsumable(consumableCollision.OnConsume());
 				OnConsumeSound?.Play();
@@ -296,7 +292,7 @@ public partial class Player : Creature
 
 			if (!DisableCollisionDamage && collider is Lanternfly lanternfly)
 			{
-				if (PlayerLight.IsEnabled())
+				if (LavityLight.IsEnabled())
 				{
 					Energy -= lanternfly.Damage;
 				}
@@ -404,7 +400,7 @@ public partial class Player : Creature
 
 		if (@event.IsActionPressed("ToggleLight"))
 		{
-			PlayerLight.Toggle();
+			LavityLight.Toggle();
 		}
 
 		if (@event.IsActionPressed("Repulse") && RepulseAnimation.CurrentAnimation != "Repulse")

@@ -8,10 +8,12 @@ public abstract partial class Creature : CharacterBody2D
 	public int Damage = 2;
 	internal Area2D PerceptionArea = null;
 	internal AnimatedSprite2D Sprite = null;
+	internal LavityLight LavityLight = null;
 	public override void _Ready()
 	{
 		base._Ready();
 		PerceptionArea = GetNode<Area2D>("PerceptionArea");
+		LavityLight = GetNode<LavityLight>("LavityLight");
 		Sprite = GetNode<AnimatedSprite2D>("Sprite");
 
 		Sprite.Play();
@@ -58,5 +60,10 @@ public abstract partial class Creature : CharacterBody2D
 
 	internal virtual void OnBodyExitedPerceptionArea(Node body)
 	{
+	}
+
+	public virtual void Kill()
+	{
+		QueueFree();
 	}
 }

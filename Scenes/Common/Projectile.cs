@@ -7,13 +7,13 @@ public partial class Projectile : RigidBody2D
 		base._Ready();
 		ContactMonitor = true;
 		MaxContactsReported = 5;
-		BodyEntered += body => { if (body is Lanternfly lanternfly) { lanternfly.Kill(); QueueFree(); } };
+		BodyEntered += body => { if (body is Creature creature) { creature.Kill(); QueueFree(); } };
 	}
 
 	public void SetLifetime(int seconds)
 	{
 		Timer timer = new() { WaitTime = seconds };
-		timer.Timeout += () => { this.QueueFree(); };
+		timer.Timeout += () => { QueueFree(); };
 		AddChild(timer);
 		timer.Start();
 	}

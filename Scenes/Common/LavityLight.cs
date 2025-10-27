@@ -58,6 +58,11 @@ public partial class LavityLight : Node2D
 		Light.Color = color;
 	}
 
+	public Color GetColor()
+	{
+		return Light.Color;
+	}
+
 	public override void _Ready()
 	{
 		base._Ready();

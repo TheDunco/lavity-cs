@@ -7,7 +7,6 @@ public partial class Lanternfly : Creature
 	private PackedScene ConsumableScene = null;
 	private RandomNumberGenerator rng = null;
 	private AudioStreamPlayer2D DeathSound = null;
-	private LavityLight lavityLight = null;
 	private int SeedsConsumed = 0;
 	public override void _Ready()
 	{
@@ -15,13 +14,12 @@ public partial class Lanternfly : Creature
 		Damage = 8;
 		base._Ready();
 		DeathSound = GetNode<AudioStreamPlayer2D>("DeathSound");
-		lavityLight = GetNode<LavityLight>("LavityLight");
 
 		ConsumableScene = GD.Load<PackedScene>("res://Scenes/Environment/Plants/SeedConsumable.tscn");
 		rng = GetNode<RngManager>("/root/RngManager").Rng;
 	}
 
-	public void Kill()
+	public override void Kill()
 	{
 		int consumableCount = rng.RandiRange(Math.Max(1, SeedsConsumed), 4 + SeedsConsumed);
 		Node rootScene = GetTree().CurrentScene;
@@ -50,7 +48,7 @@ public partial class Lanternfly : Creature
 		DeathSound.Reparent(rootScene);
 		DeathSound.Finished += () => DeathSound.QueueFree();
 		DeathSound.Play();
-		QueueFree();
+		base.Kill();
 	}
 
 	public override void _Process(double delta)
@@ -69,8 +67,7 @@ public partial class Lanternfly : Creature
 		bool didCollide = MoveAndSlide();
 		if (didCollide)
 		{
-			var collision = this.GetLastSlideCollision();
-			var collider = collision.GetCollider();
+			var collider = GetLastSlideCollision().GetCollider();
 			if (collider is Consumable consumable)
 			{
 				consumable.OnConsume();
@@ -84,7 +81,7 @@ public partial class Lanternfly : Creature
 				float UpscaleFactor = 1.15f;
 				Vector2 Upscale = new(UpscaleFactor, UpscaleFactor);
 				Scale *= Upscale;
-				lavityLight.Scale *= Upscale;
+				LavityLight.Scale *= Upscale;
 				Acceleration *= UpscaleFactor;
 			}
 		}
@@ -93,7 +90,6 @@ public partial class Lanternfly : Creature
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
-
 	}
 
 

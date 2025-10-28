@@ -58,7 +58,7 @@ public partial class Island : Node2D
 			var poly = new Polygon2D
 			{
 				Polygon = surfacePoints.ToArray(),
-				Color = Colors.SandyBrown * new Color(rng.Randf(), rng.Randf(), rng.Randf(), 1f),
+				Color = Colors.SandyBrown * new Color(rng.RandfRange(0, 0.7f), rng.RandfRange(0, 0.7f), rng.RandfRange(0, 0.7f), 1f),
 				ClipChildren = ClipChildrenMode.AndDraw
 			};
 			poly.ZIndex = 10;

@@ -83,7 +83,6 @@ public partial class Firefly : Creature
 		base._PhysicsProcess(delta);
 		if (Player != null && Player.IsLightOn())
 		{
-			GD.Print("Player");
 			MoveToward(Player.GlobalPosition, delta);
 			Sprite.Animation = "flying";
 		}
@@ -91,7 +90,6 @@ public partial class Firefly : Creature
 		{
 			if (IsInstanceValid(ClosestEnemy))
 			{
-				GD.Print("Enemy");
 				// Move away from the closest enemy
 				MoveAway(ClosestEnemy.GlobalPosition, delta);
 				Sprite.Animation = "flying";
@@ -105,7 +103,6 @@ public partial class Firefly : Creature
 		{
 			if (IsInstanceValid(ClosestKin))
 			{
-				GD.Print("Kin");
 				MoveToward(ClosestKin.GlobalPosition, delta);
 				Sprite.Animation = "flying";
 			}
@@ -116,7 +113,6 @@ public partial class Firefly : Creature
 		}
 		else
 		{
-			GD.Print("idle");
 			Sprite.Animation = "idle";
 		}
 		bool didCollide = MoveAndSlide();

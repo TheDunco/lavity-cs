@@ -20,7 +20,7 @@ public partial class Lanternfly : Creature
 
 	public override void Kill()
 	{
-		int consumableCount = rng.RandiRange(Math.Max(1, SeedsConsumed), 4 + SeedsConsumed);
+		int consumableCount = rng.RandiRange(Math.Max(1, SeedsConsumed), 1 + SeedsConsumed);
 		Node rootScene = GetTree().CurrentScene;
 		do
 		{

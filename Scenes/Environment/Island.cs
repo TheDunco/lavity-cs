@@ -61,6 +61,7 @@ public partial class Island : Node2D
 				Color = Colors.SandyBrown * new Color(rng.Randf(), rng.Randf(), rng.Randf(), 1f),
 				ClipChildren = ClipChildrenMode.AndDraw
 			};
+			poly.ZIndex = 10;
 			renderInstance.AddChild(poly);
 
 			// --- Collision ---
@@ -103,7 +104,7 @@ public partial class Island : Node2D
 		}
 	}
 
-	private void SpawnPrefabs(PackedScene[] prefabs, Vector2I chance, RandomNumberGenerator rng, int surfaceOffest = 0)
+	private void SpawnPrefabs(PackedScene[] prefabs, Vector2I chance, RandomNumberGenerator rng, int surfaceOffest = -10)
 	{
 		int plantCount = rng.RandiRange(chance.X, chance.Y); // density can be adjusted
 		for (int k = 0; k < plantCount; k++)

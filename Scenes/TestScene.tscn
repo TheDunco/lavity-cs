@@ -1,0 +1,148 @@
+[gd_scene load_steps=12 format=3 uid="uid://ygnsddcr2aab"]
+
+[ext_resource type="AudioStream" uid="uid://4hmkl3nrbvfr" path="res://Assets/Audio/music/A Moth in Light.wav" id="1_201fe"]
+[ext_resource type="PackedScene" uid="uid://bo3wlbfb6kci3" path="res://Scenes/Creatures/Player.tscn" id="2_xjl2p"]
+[ext_resource type="Script" uid="uid://dquhid4jt57mq" path="res://Scenes/Common/CameraController.cs" id="3_ytmxh"]
+[ext_resource type="Environment" uid="uid://bfvcvbom7pewe" path="res://Scenes/Environment/WorldEnvironment.tres" id="4_hctok"]
+[ext_resource type="Shader" uid="uid://dk2giajmcndcp" path="res://Shaders/Vingette.gdshader" id="5_t2vuu"]
+[ext_resource type="Script" uid="uid://btbu44y32eejh" path="res://Scenes/Common/StatsDisplay.cs" id="6_lp1f3"]
+[ext_resource type="Texture2D" uid="uid://bqa6koxf6hkc4" path="res://Assets/UI/progress-bar-circle.png" id="7_p30di"]
+[ext_resource type="Texture2D" uid="uid://ddxv2qx6a10xw" path="res://Assets/UI/progress-bar-frame.png" id="8_8c81w"]
+[ext_resource type="PackedScene" uid="uid://dxvwomgvkr7wf" path="res://Scenes/Creatures/Firefly.tscn" id="9_fi7j4"]
+[ext_resource type="PackedScene" uid="uid://c8osc7h6gnycu" path="res://Scenes/Creatures/Lanternfly.tscn" id="10_4v62a"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c2lnq"]
+shader = ExtResource("5_t2vuu")
+shader_parameter/outer_radius = 1.292
+shader_parameter/softness = 1.446
+shader_parameter/alpha = 1.316
+shader_parameter/noise_strength = 0.05
+
+[node name="TestScene" type="Node2D"]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.295866, 0.295867, 0.295866, 1)
+
+[node name="DirectionalDarkness" type="DirectionalLight2D" parent="."]
+visible = false
+energy = 0.94
+blend_mode = 1
+
+[node name="A_Moth_In_Light" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_201fe")
+volume_db = -10.679
+autoplay = true
+
+[node name="Player" parent="." instance=ExtResource("2_xjl2p")]
+z_index = 10
+z_as_relative = false
+position = Vector2(0, -1)
+
+[node name="Camera" type="Camera2D" parent="Player"]
+position = Vector2(0, 1)
+limit_left = -1410065408
+limit_top = -1410065408
+limit_right = 1410065408
+limit_bottom = 1410065408
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+script = ExtResource("3_ytmxh")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("4_hctok")
+
+[node name="VingnetteLayer" type="CanvasLayer" parent="."]
+
+[node name="Vingnette" type="ColorRect" parent="VingnetteLayer"]
+z_index = 999
+z_as_relative = false
+material = SubResource("ShaderMaterial_c2lnq")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1920.0
+offset_top = -1080.0
+offset_right = 1920.0
+offset_bottom = 1080.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="StatsDisplay" type="CanvasLayer" parent="." node_paths=PackedStringArray("Player")]
+script = ExtResource("6_lp1f3")
+Player = NodePath("../Player")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="StatsDisplay"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1132.0
+offset_top = -648.0
+offset_right = 1104.0
+offset_bottom = 620.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="StatsDisplay/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 2
+
+[node name="StomachContentsContainer" type="HBoxContainer" parent="StatsDisplay/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 2
+
+[node name="StomachProgress" type="TextureProgressBar" parent="StatsDisplay/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+value = 30.0
+fill_mode = 4
+texture_under = ExtResource("7_p30di")
+texture_over = ExtResource("8_8c81w")
+texture_progress = ExtResource("7_p30di")
+tint_under = Color(0.0823529, 0.0823529, 0.0823529, 0.117647)
+tint_over = Color(0.121569, 0.121569, 0.121569, 0.501961)
+tint_progress = Color(0.190694, 0.345703, 0.133131, 1)
+
+[node name="EnergyProgress" type="TextureProgressBar" parent="StatsDisplay/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+value = 30.0
+fill_mode = 4
+texture_under = ExtResource("7_p30di")
+texture_over = ExtResource("8_8c81w")
+texture_progress = ExtResource("7_p30di")
+tint_under = Color(0.0823529, 0.0823529, 0.0823529, 0.117647)
+tint_over = Color(0.121569, 0.121569, 0.121569, 0.501961)
+tint_progress = Color(0.871547, 0.871546, 1.54018e-06, 1)
+
+[node name="HealthProgress" type="TextureProgressBar" parent="StatsDisplay/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+value = 30.0
+fill_mode = 4
+texture_under = ExtResource("7_p30di")
+texture_over = ExtResource("8_8c81w")
+texture_progress = ExtResource("7_p30di")
+tint_under = Color(0.0823529, 0.0823529, 0.0823529, 0.117647)
+tint_over = Color(0.121569, 0.121569, 0.121569, 0.501961)
+tint_progress = Color(0.579254, 1.97336e-06, 3.85046e-07, 1)
+
+[node name="Firefly" parent="." instance=ExtResource("9_fi7j4")]
+position = Vector2(599, 425)
+
+[node name="Firefly2" parent="." instance=ExtResource("9_fi7j4")]
+position = Vector2(599, 491)
+
+[node name="Firefly3" parent="." instance=ExtResource("9_fi7j4")]
+position = Vector2(304, 549)
+
+[node name="Lanternfly" parent="." instance=ExtResource("10_4v62a")]
+position = Vector2(-2172, 488)

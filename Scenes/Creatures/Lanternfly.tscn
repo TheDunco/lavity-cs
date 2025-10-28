@@ -55,7 +55,7 @@ material = ExtResource("2_ccswi")
 position = Vector2(-18, -14)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_x2pff")
-frame_progress = 0.505601
+frame_progress = 0.161194
 
 [node name="LavityLight" parent="." instance=ExtResource("4_owse1")]
 position = Vector2(22, -5)

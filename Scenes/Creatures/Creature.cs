@@ -9,7 +9,7 @@ public abstract partial class Creature : CharacterBody2D
 	internal LavityLight LavityLight = null;
 	[Export] internal int BaseAcceleration = 1000;
 	internal float Acceleration;
-	internal float AirResistance = 10;
+	internal float AirResistance = 100;
 	internal float MaxSpeed = 2000;
 	public override void _Ready()
 	{
@@ -31,9 +31,18 @@ public abstract partial class Creature : CharacterBody2D
 
 	internal void MoveToward(Vector2 pos, double delta)
 	{
-		float fDelta = (float)delta;
 		LookAt(pos);
-		Velocity = Velocity.MoveToward(GlobalPosition.DirectionTo(pos) * MaxSpeed, Acceleration * fDelta + (GlobalPosition.DistanceTo(pos) * (1 / 100)));
+		Velocity = Velocity.MoveToward(GlobalPosition.DirectionTo(pos) * MaxSpeed, Acceleration * (float)delta + (GlobalPosition.DistanceTo(pos) * (1 / 100)));
+	}
+
+	internal void MoveAway(Vector2 pos, double delta)
+	{
+		Vector2 awayDir = (GlobalPosition - pos).Normalized();
+		LookAt(GlobalPosition + awayDir);
+		Velocity = Velocity.MoveToward(
+			awayDir * MaxSpeed,
+			Acceleration * (float)delta + (GlobalPosition.DistanceTo(pos) * 0.01f)
+		);
 	}
 
 	public void Reparent(Node node)

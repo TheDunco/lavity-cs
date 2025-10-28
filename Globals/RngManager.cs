@@ -10,7 +10,7 @@ public partial class RngManager : Node
 	public override void _Ready()
 	{
 		base._Ready();
-		Rng.Seed = (ulong)Rng.RandfRange(1, Mathf.Inf);
+		SetSeed((ulong)new RandomNumberGenerator().RandfRange(1, Mathf.Inf));
 	}
 
 	public void SetSeed(ulong seed)

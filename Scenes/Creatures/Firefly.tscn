@@ -51,7 +51,7 @@ shape = SubResource("CapsuleShape2D_ui8e0")
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_k1haf")
 animation = &"flying"
-frame_progress = 0.157754
+frame_progress = 0.824421
 
 [node name="LavityLight" parent="." instance=ExtResource("5_ui8e0")]
 position = Vector2(-47, 9)

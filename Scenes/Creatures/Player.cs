@@ -211,23 +211,12 @@ public partial class Player : Creature
 					 .SetEase(Tween.EaseType.InOut);
 		}
 
-		LookAt(Velocity.Normalized() + Position);
-		OrientByRotation();
-	}
-
-	private float AirResistance = 10;
-	private float MaxSpeed = 2000;
-	private float TurnSpeed = 1;
-	public override void _PhysicsProcess(double delta)
-	{
-		base._PhysicsProcess(delta);
-		Vector2 input = Vector2.Zero;
-		IsInputAdded = false;
-
-		if (Input.IsActionPressed("MoveUp")) { input.Y -= 1; IsInputAdded = true; }
-		if (Input.IsActionPressed("MoveLeft")) { input.X -= 1; IsInputAdded = true; }
-		if (Input.IsActionPressed("MoveDown")) { input.Y += 1; IsInputAdded = true; }
-		if (Input.IsActionPressed("MoveRight")) { input.X += 1; IsInputAdded = true; }
+		// Reset logic
+		if (Input.IsKeyPressed(Key.Backspace))
+		{
+			Position = Vector2.Zero;
+			Velocity = Vector2.Zero;
+		}
 
 		// Handle animation & sound
 		if (IsInputAdded)
@@ -241,14 +230,27 @@ public partial class Player : Creature
 			Sprite.Stop();
 		}
 
-		// Reset logic
-		if (Input.IsKeyPressed(Key.Backspace))
-		{
-			Position = Vector2.Zero;
-			Velocity = Vector2.Zero;
-		}
+		LookAt(Velocity.Normalized() + Position);
+		OrientByRotation();
+	}
 
-		if (input != Vector2.Zero)
+	private float AirResistance = 10;
+	private float MaxSpeed = 2000;
+	private float TurnSpeed = 1;
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+		Vector2 input = Vector2.Zero;
+		IsInputAdded = false;
+		float fDelta = (float)delta;
+
+		if (Input.IsActionPressed("MoveUp")) { input.Y -= 1; IsInputAdded = true; }
+		if (Input.IsActionPressed("MoveLeft")) { input.X -= 1; IsInputAdded = true; }
+		if (Input.IsActionPressed("MoveDown")) { input.Y += 1; IsInputAdded = true; }
+		if (Input.IsActionPressed("MoveRight")) { input.X += 1; IsInputAdded = true; }
+
+
+		if (IsInputAdded)
 		{
 			Vector2 targetDir = input.Normalized();
 
@@ -263,7 +265,7 @@ public partial class Player : Creature
 			{
 				float currentAngle = Velocity.Angle();
 				float targetAngle = targetDir.Angle();
-				float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, (float)(TurnSpeed * delta));
+				float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, TurnSpeed * fDelta);
 				float speed = Velocity.Length();
 				Velocity = Vector2.FromAngle(newAngle) * speed;
 			}
@@ -271,19 +273,19 @@ public partial class Player : Creature
 			else if (alignment <= -0.7f)
 			{
 				// Slow down before reversing
-				Velocity = Velocity.MoveToward(Vector2.Zero, Acceleration * (float)delta);
+				Velocity = Velocity.MoveToward(Vector2.Zero, Acceleration * fDelta);
 			}
 
 			// Accelerate toward target speed
-			Velocity = Velocity.MoveToward(targetDir * MaxSpeed, Acceleration * (float)delta);
+			Velocity = Velocity.MoveToward(targetDir * MaxSpeed, Acceleration * fDelta);
 		}
 		else
 		{
 			// Passive air resistance when idle
-			Velocity = Velocity.MoveToward(Vector2.Zero, AirResistance * (float)delta);
+			Velocity = Velocity.MoveToward(Vector2.Zero, AirResistance * fDelta);
 		}
 
-		Velocity += GetGravity();
+		Velocity += GetGravity() * fDelta;
 		bool didCollide = MoveAndSlide();
 
 		if (didCollide)

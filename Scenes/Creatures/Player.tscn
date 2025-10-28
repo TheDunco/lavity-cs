@@ -146,7 +146,6 @@ animations = [{
 z_index = 1
 collision_layer = 5
 script = ExtResource("1_ohbs4")
-BaseAcceleration = 1000
 
 [node name="TempBG" type="Sprite2D" parent="."]
 z_as_relative = false

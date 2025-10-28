@@ -25,6 +25,7 @@ public partial class Lanternfly : Creature
 		do
 		{
 			Consumable consumable = ConsumableScene.Instantiate<Consumable>();
+			consumable.Modulate = Colors.Red;
 
 			consumable.Effect = new PlantEffect
 			{

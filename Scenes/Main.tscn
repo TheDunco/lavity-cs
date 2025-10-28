@@ -48,7 +48,8 @@ z_index = 10
 z_as_relative = false
 position = Vector2(0, -1)
 
-[node name="Camera" type="Camera2D" parent="."]
+[node name="Camera" type="Camera2D" parent="Player"]
+position = Vector2(0, 1)
 limit_left = -1410065408
 limit_top = -1410065408
 limit_right = 1410065408
@@ -57,7 +58,6 @@ limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 script = ExtResource("7_4kpch")
-TargetPath = NodePath("../Player")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("5_jw32o")

@@ -3,7 +3,7 @@ using System;
 
 public abstract partial class Creature : CharacterBody2D
 {
-	[Export] internal int BaseAcceleration = 5;
+	[Export] internal int BaseAcceleration = 20;
 	internal float Acceleration;
 	public int Damage = 2;
 	internal Area2D PerceptionArea = null;

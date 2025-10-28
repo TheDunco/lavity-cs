@@ -21,10 +21,6 @@ public partial class Player : Creature
 	private double pendingHealth;
 	private bool IsInputAdded = false;
 
-	// Movement
-	private float AirResistance = 0.0002f;
-	private float MaxVelocity = 1500;
-
 	private AudioStreamPlayer WingFlapSounds = null;
 
 	// Camera
@@ -49,7 +45,7 @@ public partial class Player : Creature
 	{
 		base._Ready();
 		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
-		Camera = GetNode<CameraController>("../Camera");
+		Camera = GetNode<CameraController>("../Player/Camera");
 		targetZoom = Camera.Zoom;
 		OnConsumeSound = GetNode<AudioStreamPlayer>("OnConsumeSound");
 		statsDisplay = GetNode<StatsDisplay>("../StatsDisplay");
@@ -188,37 +184,6 @@ public partial class Player : Creature
 	public override void _Process(double delta)
 	{
 
-		IsInputAdded = false;
-		if (Input.IsActionPressed("MoveUp"))
-		{
-			Velocity += Vector2.Up * Acceleration * (float)delta;
-			IsInputAdded = true;
-		}
-
-		if (Input.IsActionPressed("MoveLeft"))
-		{
-			Velocity += Vector2.Left * Acceleration * (float)(delta);
-			IsInputAdded = true;
-		}
-
-		if (Input.IsActionPressed("MoveDown"))
-		{
-			Velocity += Vector2.Down * Acceleration * (float)(delta);
-			IsInputAdded = true;
-		}
-
-		if (Input.IsActionPressed("MoveRight"))
-		{
-			Velocity += Vector2.Right * Acceleration * (float)(delta);
-			IsInputAdded = true;
-		}
-
-		if (Input.IsKeyPressed(Key.Backspace))
-		{
-			Position = Vector2.Zero;
-			Velocity = Vector2.Zero;
-		}
-
 		if (Input.IsActionPressed("ZoomIn"))
 		{
 			targetZoom += new Vector2(ZoomSpeed, ZoomSpeed) * (float)delta;
@@ -246,44 +211,86 @@ public partial class Player : Creature
 					 .SetEase(Tween.EaseType.InOut);
 		}
 
+		LookAt(Velocity.Normalized() + Position);
+		OrientByRotation();
+	}
 
-		bool isZeroApprox = Velocity.IsZeroApprox();
+	private float AirResistance = 10;
+	private float MaxSpeed = 2000;
+	private float TurnSpeed = 1;
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+		Vector2 input = Vector2.Zero;
+		IsInputAdded = false;
 
+		if (Input.IsActionPressed("MoveUp")) { input.Y -= 1; IsInputAdded = true; }
+		if (Input.IsActionPressed("MoveLeft")) { input.X -= 1; IsInputAdded = true; }
+		if (Input.IsActionPressed("MoveDown")) { input.Y += 1; IsInputAdded = true; }
+		if (Input.IsActionPressed("MoveRight")) { input.X += 1; IsInputAdded = true; }
+
+		// Handle animation & sound
 		if (IsInputAdded)
 		{
 			Sprite.Play();
 			if (!WingFlapSounds.Playing)
-			{
 				WingFlapSounds.Play();
-			}
 		}
 		else
 		{
 			Sprite.Stop();
 		}
 
-		if (!isZeroApprox && !IsInputAdded)
+		// Reset logic
+		if (Input.IsKeyPressed(Key.Backspace))
 		{
-			Velocity += -Velocity * AirResistance;
-		}
-		else if (isZeroApprox)
-		{
+			Position = Vector2.Zero;
 			Velocity = Vector2.Zero;
 		}
 
-		Velocity = Velocity.Clamp(-MaxVelocity, MaxVelocity);
+		if (input != Vector2.Zero)
+		{
+			Vector2 targetDir = input.Normalized();
 
-		LookAt(Velocity.Normalized() + Position);
-		OrientByRotation();
+			// Determine how aligned the input is with current velocity
+			float alignment = Velocity.Normalized().Dot(targetDir);
+			// alignment = 1 → same direction
+			// alignment = 0 → perpendicular
+			// alignment = -1 → opposite direction
+
+			// If moving and not facing opposite, smooth turn
+			if (Velocity.Length() > 0.01f && alignment > -0.7f)
+			{
+				float currentAngle = Velocity.Angle();
+				float targetAngle = targetDir.Angle();
+				float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, (float)(TurnSpeed * delta));
+				float speed = Velocity.Length();
+				Velocity = Vector2.FromAngle(newAngle) * speed;
+			}
+			// If nearly opposite input → decelerate instead of rotating
+			else if (alignment <= -0.7f)
+			{
+				// Slow down before reversing
+				Velocity = Velocity.MoveToward(Vector2.Zero, Acceleration * (float)delta);
+			}
+
+			// Accelerate toward target speed
+			Velocity = Velocity.MoveToward(targetDir * MaxSpeed, Acceleration * (float)delta);
+		}
+		else
+		{
+			// Passive air resistance when idle
+			Velocity = Velocity.MoveToward(Vector2.Zero, AirResistance * (float)delta);
+		}
 
 		Velocity += GetGravity();
-
 		bool didCollide = MoveAndSlide();
 
 		if (didCollide)
 		{
-			var collision = this.GetLastSlideCollision();
+			var collision = GetLastSlideCollision();
 			var collider = collision.GetCollider();
+
 			if (collider is Consumable consumableCollision && !LavityLight.IsEnabled() && IsInstanceValid(collider))
 			{
 				EatConsumable(consumableCollision.OnConsume());
@@ -293,17 +300,20 @@ public partial class Player : Creature
 			if (!DisableCollisionDamage && collider is Lanternfly lanternfly)
 			{
 				if (LavityLight.IsEnabled())
-				{
 					Energy -= lanternfly.Damage;
-				}
 				else
-				{
 					Health -= lanternfly.Damage;
-				}
+
 				DisableCollisionDamage = true;
 			}
 		}
+
+		// Smoothly rotate sprite toward current movement direction
+		if (Velocity.LengthSquared() > 0.1f)
+			Rotation = Mathf.LerpAngle(Rotation, Velocity.Angle(), (float)(TurnSpeed * delta));
 	}
+
+
 
 	private void Repulse()
 	{

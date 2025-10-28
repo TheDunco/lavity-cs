@@ -7,7 +7,7 @@ public partial class Projectile : RigidBody2D
 		base._Ready();
 		ContactMonitor = true;
 		MaxContactsReported = 5;
-		BodyEntered += body => { if (body is Creature creature) { creature.Kill(); QueueFree(); } };
+		BodyEntered += body => { if (body is Creature creature && creature is not Player) { creature.Kill(); QueueFree(); } };
 	}
 
 	public void SetLifetime(int seconds)

@@ -10,7 +10,6 @@ public partial class Lanternfly : Creature
 	private int SeedsConsumed = 0;
 	public override void _Ready()
 	{
-		BaseAcceleration = 3;
 		Damage = 8;
 		base._Ready();
 		DeathSound = GetNode<AudioStreamPlayer2D>("DeathSound");
@@ -54,16 +53,22 @@ public partial class Lanternfly : Creature
 	public override void _Process(double delta)
 	{
 		base._Process(delta);
+		OrientByRotation();
+
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
 		if (Player != null)
 		{
-			MoveToward(Player.GlobalPosition);
+			MoveToward(Player.GlobalPosition, delta);
 			Sprite.Play();
 		}
 		else
 		{
 			Sprite.Stop();
 		}
-		OrientByRotation();
 		bool didCollide = MoveAndSlide();
 		if (didCollide)
 		{
@@ -85,11 +90,6 @@ public partial class Lanternfly : Creature
 				Acceleration *= UpscaleFactor;
 			}
 		}
-	}
-
-	public override void _PhysicsProcess(double delta)
-	{
-		base._PhysicsProcess(delta);
 	}
 
 

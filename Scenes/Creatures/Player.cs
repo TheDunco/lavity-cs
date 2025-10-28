@@ -41,6 +41,7 @@ public partial class Player : Creature
 	private RandomNumberGenerator rng = null;
 	private PackedScene ProjectileScene = GD.Load<PackedScene>("res://Scenes/Common/Projectile.tscn");
 	private AudioStreamPlayer ProjectileSound = null;
+	internal float TurnSpeed = 1;
 	public override void _Ready()
 	{
 		base._Ready();
@@ -234,9 +235,6 @@ public partial class Player : Creature
 		OrientByRotation();
 	}
 
-	private float AirResistance = 10;
-	private float MaxSpeed = 2000;
-	private float TurnSpeed = 1;
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
@@ -285,7 +283,6 @@ public partial class Player : Creature
 			Velocity = Velocity.MoveToward(Vector2.Zero, AirResistance * fDelta);
 		}
 
-		Velocity += GetGravity() * fDelta;
 		bool didCollide = MoveAndSlide();
 
 		if (didCollide)

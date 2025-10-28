@@ -74,9 +74,15 @@ public partial class Firefly : Creature
 	public override void _Process(double delta)
 	{
 		base._Process(delta);
+		OrientByRotation();
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
 		if (Player != null && Player.IsLightOn())
 		{
-			MoveToward(Player.GlobalPosition);
+			MoveToward(Player.GlobalPosition, delta);
 			Sprite.Animation = "flying";
 		}
 		else if (Enemies.Count > 0 && ClosestEnemy != null)
@@ -84,7 +90,7 @@ public partial class Firefly : Creature
 			if (IsInstanceValid(ClosestEnemy))
 			{
 				// Move away from the closest enemy
-				MoveToward(-ClosestEnemy.GlobalPosition);
+				MoveToward(-ClosestEnemy.GlobalPosition, delta);
 				Sprite.Animation = "flying";
 
 			}
@@ -97,7 +103,7 @@ public partial class Firefly : Creature
 		{
 			if (IsInstanceValid(ClosestKin))
 			{
-				MoveToward(ClosestKin.GlobalPosition);
+				MoveToward(ClosestKin.GlobalPosition, delta);
 				Sprite.Animation = "flying";
 
 			}
@@ -110,7 +116,6 @@ public partial class Firefly : Creature
 		{
 			Sprite.Animation = "idle";
 		}
-		OrientByRotation();
 		bool didCollide = MoveAndSlide();
 		if (didCollide)
 		{
@@ -121,6 +126,7 @@ public partial class Firefly : Creature
 			}
 		}
 	}
+
 
 	public override void Kill()
 	{

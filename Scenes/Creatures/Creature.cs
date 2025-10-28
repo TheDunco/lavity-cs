@@ -3,12 +3,14 @@ using System;
 
 public abstract partial class Creature : CharacterBody2D
 {
-	[Export] internal int BaseAcceleration = 20;
-	internal float Acceleration;
 	public int Damage = 2;
 	internal Area2D PerceptionArea = null;
 	internal AnimatedSprite2D Sprite = null;
 	internal LavityLight LavityLight = null;
+	[Export] internal int BaseAcceleration = 1000;
+	internal float Acceleration;
+	internal float AirResistance = 10;
+	internal float MaxSpeed = 2000;
 	public override void _Ready()
 	{
 		base._Ready();
@@ -27,10 +29,11 @@ public abstract partial class Creature : CharacterBody2D
 		Acceleration = BaseAcceleration;
 	}
 
-	internal void MoveToward(Vector2 pos)
+	internal void MoveToward(Vector2 pos, double delta)
 	{
+		float fDelta = (float)delta;
 		LookAt(pos);
-		Velocity += GlobalPosition.DirectionTo(pos) * (Acceleration + (GlobalPosition.DistanceTo(pos) * (1 / 100)));
+		Velocity = Velocity.MoveToward(GlobalPosition.DirectionTo(pos) * MaxSpeed, Acceleration * fDelta + (GlobalPosition.DistanceTo(pos) * (1 / 100)));
 	}
 
 	public void Reparent(Node node)
@@ -53,6 +56,14 @@ public abstract partial class Creature : CharacterBody2D
 			Scale = new Vector2(Scale.X, Math.Abs(Scale.Y));
 		}
 	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+		Velocity = Velocity.Clamp(-MaxSpeed, MaxSpeed);
+		Velocity += GetGravity() * (float)delta * 1000;
+	}
+
 
 	internal virtual void OnBodyEnteredPerceptionArea(Node body)
 	{

@@ -46,7 +46,7 @@ public partial class Player : Creature
 	{
 		base._Ready();
 		WingFlapSounds = GetNode<AudioStreamPlayer>("WingFlapSounds");
-		Camera = GetNode<CameraController>("../Player/Camera");
+		Camera = GetNode<CameraController>("../Camera");
 		targetZoom = Camera.Zoom;
 		OnConsumeSound = GetNode<AudioStreamPlayer>("OnConsumeSound");
 		statsDisplay = GetNode<StatsDisplay>("../StatsDisplay");

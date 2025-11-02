@@ -75,6 +75,18 @@ public partial class Player : Creature
 		return ret;
 	}
 
+	public void ClearStomachConsumables()
+	{
+		var children = GetChildren();
+		foreach (Node n in children)
+		{
+			if (n is Consumable c)
+			{
+				c.QueueFree();
+			}
+		}
+	}
+
 	public bool IsLightOn()
 	{
 		return LavityLight.IsEnabled();
@@ -100,6 +112,26 @@ public partial class Player : Creature
 		{
 			Health -= Fullness - MaxStomachSpace;
 		}
+	}
+
+	public override void Kill()
+	{
+		ProcessMode = ProcessModeEnum.Disabled;
+		Velocity = Vector2.Zero;
+		Visible = false;
+		// TODO: Play particle animation
+		statsDisplay.SwitchToDeathScreen();
+		ClearStomachConsumables();
+		Camera.Shake(4, 10);
+	}
+
+	public void Revive()
+	{
+		ProcessMode = ProcessModeEnum.Always;
+		Visible = true;
+		statsDisplay.SwitchToStatsDisplay();
+		Energy = MaxEnergy / 2;
+		Health = MaxHealth / 2;
 	}
 
 	private void OnStatsTick()
@@ -169,7 +201,7 @@ public partial class Player : Creature
 
 		if (Health == 0)
 		{
-			GetTree().Quit();
+			Kill();
 		}
 		else if (Health < MaxHealth * 0.25)
 		{
@@ -311,8 +343,6 @@ public partial class Player : Creature
 		if (Velocity.LengthSquared() > 0.1f)
 			Rotation = Mathf.LerpAngle(Rotation, Velocity.Angle(), (float)(TurnSpeed * delta));
 	}
-
-
 
 	private void Repulse()
 	{

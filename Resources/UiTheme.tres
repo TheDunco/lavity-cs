@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://436xx3far13s"]
+
+[ext_resource type="FontFile" uid="uid://c7f4tvd2g3lsp" path="res://Assets/Fonts/Michroma-Regular.ttf" id="1_ho3et"]
+
+[resource]
+Button/fonts/font = ExtResource("1_ho3et")
+Label/fonts/font = ExtResource("1_ho3et")
